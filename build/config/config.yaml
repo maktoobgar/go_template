@@ -1,0 +1,9 @@
+database:
+  username: "postgres"
+  password: "M123456789H"
+  db_name: "bookstore_db"
+  host: "127.0.0.1"
+  port: 5432
+  ssl_mode: "disable"
+  time_zone: "Asia/Tehran"
+  charset: "utf8mb4"
