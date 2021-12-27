@@ -1,28 +1,36 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
+	"github.com/maktoobgar/bookstore/internal/app"
 	"github.com/maktoobgar/bookstore/internal/config"
 )
 
-// Load all local and project configurations
+var (
+	cfg *config.Config = &config.Config{}
+)
+
+// Initialization for config files in configs folder
+func initializeConfigs() {
+	// if err := config.ReadProjectConfigs(cfg); err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	if err := config.ReadLocalConfigs(cfg); err != nil {
+		log.Fatalln(err)
+	}
+
+	config.SetConfig(cfg)
+}
+
+// Server initialization
 func init() {
-	var cfg config.Config
-
-	if err := config.ReadProjectConfigs(&cfg); err != nil {
-		log.Fatalln(err)
-	}
-
-	if err := config.ReadLocalConfigs(&cfg); err != nil {
-		log.Fatalln(err)
-	}
-
-	config.SetConfig(&cfg)
-	fmt.Println(cfg)
+	initializeConfigs()
 }
 
 func main() {
-
+	if err := app.Run(cfg); err != nil {
+		log.Fatalln(err)
+	}
 }

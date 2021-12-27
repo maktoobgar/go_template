@@ -8,6 +8,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+const (
+	// The address where all configuration files are stored.
+	address string = "build/config/"
+)
+
 var (
 	// Main project configs
 	cfg                     *Config
@@ -25,23 +30,23 @@ func Parse(path string, cfg *Config, errorOnFileNotFound bool) error {
 	}
 }
 
-// Reads "./build/config/config.yaml" config file and save them in cfg config file
+// Reads "address_to_config_folder/config.yaml" file and save them in `cfg` variable
 func ReadProjectConfigs(cfg *Config) error {
-	if err := Parse("./build/config/config.yaml", cfg, true); err != nil {
+	if err := Parse(address+"config.yaml", cfg, true); err != nil {
 		return err
 	}
 	return nil
 }
 
-// Reads "./env.yaml" config file(if exists) and save them in cfg config file
+// Reads "env.yaml" config file(if exists) and save them in `cfg` variable
 func ReadLocalConfigs(cfg *Config) error {
-	if err := Parse("./env.yaml", cfg, false); err != nil {
+	if err := Parse("env.yaml", cfg, false); err != nil {
 		return err
 	}
 	return nil
 }
 
-// Get the config pointer and point out to config struct as cfg for faster access
+// Gets the `conf` pointer and makes `cfg` global variable to point out where `conf` points
 func SetConfig(conf *Config) {
 	cfg = conf
 }
