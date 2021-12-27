@@ -8,14 +8,14 @@ import (
 )
 
 var (
-	cfg *config.Config = &config.Config{}
+	cfg = &config.Config{}
 )
 
 // Initialization for config files in configs folder
 func initializeConfigs() {
-	// if err := config.ReadProjectConfigs(cfg); err != nil {
-	// 	log.Fatalln(err)
-	// }
+	if err := config.ReadProjectConfigs(cfg); err != nil {
+		log.Fatalln(err)
+	}
 
 	if err := config.ReadLocalConfigs(cfg); err != nil {
 		log.Fatalln(err)

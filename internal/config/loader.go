@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 	"os"
-	"strings"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -22,8 +22,8 @@ var (
 // Checks if extention of the file is supported or not and if supported
 // its configurations will be read and will be saved in cfg variable
 func Parse(path string, cfg *Config, errorOnFileNotFound bool) error {
-	switch fileExtention(path) {
-	case "yaml":
+	switch filepath.Ext(path) {
+	case ".yaml", ".yml":
 		return parseYaml(path, cfg, errorOnFileNotFound)
 	default:
 		return ErrUnknownFileExtention
@@ -49,12 +49,6 @@ func ReadLocalConfigs(cfg *Config) error {
 // Gets the `conf` pointer and makes `cfg` global variable to point out where `conf` points
 func SetConfig(conf *Config) {
 	cfg = conf
-}
-
-// Returns extention of config file
-func fileExtention(path string) string {
-	var s []string = strings.Split(path, ".")
-	return s[len(s)-1]
 }
 
 // Parses configuration data of a yaml file
