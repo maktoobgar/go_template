@@ -3,6 +3,7 @@
 .env
 env.yaml
 env
+go.sum
 
 # vscode
 
