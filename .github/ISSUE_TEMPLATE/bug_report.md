@@ -2,7 +2,7 @@
 name: Bug report
 about: When I did this, that happened.
 title: "[this] causes the bug"
-labels: ''
+labels: bug
 assignees: ''
 
 ---
