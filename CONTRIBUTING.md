@@ -29,13 +29,22 @@ Scan through our [existing issues](https://github.com/maktoobgar/bookstore/issue
 2. Git clone your forked version of project.
 3. Make your changes locally.
 4. Test and debug your changes.(If you want, you can add test cases too)
-5. If your code is done, DON'T FORGET to add your changes to [**CHANGELOG**](./CHANGELOG.rst) under **UNRELEASED** section. (If you wanna know how to edit the CHANGELOG, have a look at [CHANGELOG](#changelog) section)
-6. If you are sure of your code, commit your changes (there are rules for commits in [Commit Rules](#commit-rules) section, have a look)
-7. Create a pull request.
-8. Wait for the review:
+5. Add documentation for your new functions, interfaces and other important new things you added.
+6. If your code is done, DON'T FORGET to add your changes to [**CHANGELOG**](./CHANGELOG.rst) under **UNRELEASED** section. (If you wanna know how to edit the CHANGELOG, have a look at [CHANGELOG](#changelog) section)
+7. If you are sure of your code, commit your changes (there are rules for commits in [Commit Rules](#commit-rules) section, have a look)
+8. Create a pull request.
+9. Wait for the review:
    1.  If the reviewer asked you something to add or change to your code, do that and then comeback and inform us about the changes.
    2.  If the review rejected, we will inform you about the reason but I don't think we do that cause any improvement is improvement and acceptable but **IF** it is an improvement and that's a cheap **IF** cause I personally suck at programming. :)
    3.  If the review passed and pull request happened, thank you. we are happy to have you and we appreciate your work. :sparkles:. 
+
+So in summary:
+1. Do the changes.
+2. Debug and be sure about the changes.
+3. Add documentation for new functions and variables and new...
+4. Add changes you made to the changelog. (see [CHANGELOG](#changelog))
+5. Commit your changes. (see [Commit Rules](#commit-rules))
+6. Create a pull request.
 
 ### Changelog
 
