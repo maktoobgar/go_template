@@ -10,6 +10,8 @@ import (
 
 const (
 	// The address where all configuration files are stored.
+	//
+	// TODO: Better for user to specify this as a parameter in a function not us hardcoding it
 	address string = "build/config/"
 )
 
@@ -31,6 +33,8 @@ func Parse(path string, cfg *Config, errorOnFileNotFound bool) error {
 }
 
 // Reads "address_to_config_folder/config.yaml" file and save them in `cfg` variable
+//
+// TODO: This function does not support windows address
 func ReadProjectConfigs(cfg *Config) error {
 	if err := Parse(address+"config.yaml", cfg, true); err != nil {
 		return err
@@ -39,6 +43,8 @@ func ReadProjectConfigs(cfg *Config) error {
 }
 
 // Reads "env.yaml" config file(if exists) and save them in `cfg` variable
+//
+// TODO: This function does not support windows address
 func ReadLocalConfigs(cfg *Config) error {
 	if err := Parse("env.yaml", cfg, false); err != nil {
 		return err

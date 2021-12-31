@@ -1,4 +1,4 @@
-package contract
+package translator
 
 const (
 	EN = "en"

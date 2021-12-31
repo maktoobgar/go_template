@@ -7,3 +7,13 @@ database:
   ssl_mode: "disable"
   time_zone: "Asia/Tehran"
   charset: "utf8mb4"
+
+translator:
+  path: "build/translations"
+
+logging:
+  path: "/var/log/gotorn"
+  pattern: "%Y-%m-%d"
+  max_age: "720h" # One month
+  rotation_time: "24h"
+  rotation_size: "20MB"

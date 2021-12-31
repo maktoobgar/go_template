@@ -3,7 +3,7 @@ package errors
 import (
 	"net/http"
 
-	"github.com/maktoobgar/bookstore/pkg/translator/messages"
+	"github.com/maktoobgar/bookstore/pkg/errors/messages"
 )
 
 type (
@@ -45,7 +45,7 @@ func (e serverError) Error() string {
 func HttpError(e error) (string, int) {
 	err, ok := e.(serverError)
 	if !ok {
-		return messages.GeneralError, httpErrors[UnexpectedStatus]
+		return messages.ErrorGeneral, httpErrors[UnexpectedStatus]
 	}
 
 	httpCode, ok := httpErrors[err.code]
