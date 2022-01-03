@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/maktoobgar/bookstore/internal/app"
-	"github.com/maktoobgar/bookstore/internal/config"
+	"github.com/gotorn/core/internal/app"
+	"github.com/gotorn/core/internal/config"
 )
 
 var (

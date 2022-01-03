@@ -3,7 +3,7 @@ package errors
 import (
 	"net/http"
 
-	"github.com/maktoobgar/bookstore/pkg/errors/messages"
+	"github.com/gotorn/core/pkg/errors/messages"
 )
 
 type (

@@ -1,7 +1,7 @@
 database:
   username: "postgres"
   password: "M123456789H"
-  db_name: "bookstore_db"
+  db_name: "gotorn_db"
   host: "127.0.0.1"
   port: 5432
   ssl_mode: "disable"

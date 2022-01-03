@@ -16,11 +16,11 @@ To get an overview of the project, read the [README](README.md).
 
 #### Create a new issue
 
-If you spot a problem with the project or docs, search if the [issue already exists](https://github.com/maktoobgar/bookstore/issues). If a related issue doesn't exist, you can open a new issue using a relevant [issue form](https://github.com/maktoobgar/bookstore/issues/new/choose).
+If you spot a problem with the project or docs, search if the [issue already exists](https://github.com/gotorn/core/issues). If a related issue doesn't exist, you can open a new issue using a relevant [issue form](https://github.com/gotorn/core/issues/new/choose).
 
 #### Solve an issue
 
-Scan through our [existing issues](https://github.com/maktoobgar/bookstore/issues) to find one that interests you. You can narrow down the search using `labels` as filters. As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
+Scan through our [existing issues](https://github.com/gotorn/core/issues) to find one that interests you. You can narrow down the search using `labels` as filters. As a general rule, we don’t assign issues to anyone. If you find an issue to work on, you are welcome to open a PR with a fix.
 
 ### Make Changes
 
@@ -74,7 +74,7 @@ There are some stickers to use in a commit which are:
 6. 📁 Moved
     - Means you moved a (folder-file) to somewhere else.
 7. 🐞 #IssueID
-   - Means you fixed an issue from [issues](https://github.com/maktoobgar/bookstore/issues) section of this repository.
+   - Means you fixed an issue from [issues](https://github.com/gotorn/core/issues) section of this repository.
 
 Let's have some examples of each one of them:
 1. 🐛 Fixed translator, bug in line 19

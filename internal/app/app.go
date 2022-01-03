@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/maktoobgar/bookstore/internal/config"
-	"github.com/maktoobgar/bookstore/pkg/logging"
-	"github.com/maktoobgar/bookstore/pkg/translator"
+	"github.com/gotorn/core/internal/config"
+	"github.com/gotorn/core/pkg/logging"
+	"github.com/gotorn/core/pkg/translator"
 	"golang.org/x/text/language"
 )
 

@@ -1,4 +1,4 @@
-module github.com/maktoobgar/bookstore
+module github.com/gotorn/core
 
 go 1.17
 
