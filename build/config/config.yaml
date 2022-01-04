@@ -1,9 +1,19 @@
 database:
   username: "postgres"
   password: "M123456789H"
-  db_name: "bookstore_db"
+  db_name: "gotorn_db"
   host: "127.0.0.1"
   port: 5432
   ssl_mode: "disable"
   time_zone: "Asia/Tehran"
   charset: "utf8mb4"
+
+translator:
+  path: "build/translations"
+
+logging:
+  path: "/var/log/gotorn"
+  pattern: "%Y-%m-%d"
+  max_age: "720h" # One month
+  rotation_time: "24h"
+  rotation_size: "20MB"
