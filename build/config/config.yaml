@@ -1,7 +1,7 @@
 database:
   username: "postgres"
   password: "M123456789H"
-  db_name: "gotorn_db"
+  db_name: "project_db"
   host: "127.0.0.1"
   port: 5432
   ssl_mode: "disable"
@@ -12,7 +12,7 @@ translator:
   path: "build/translations"
 
 logging:
-  path: "/var/log/gotorn"
+  path: "/var/log/project"
   pattern: "%Y-%m-%d"
   max_age: "720h" # One month
   rotation_time: "24h"

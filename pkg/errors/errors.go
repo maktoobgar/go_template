@@ -3,7 +3,7 @@ package errors
 import (
 	"net/http"
 
-	"github.com/gotorn/core/pkg/errors/messages"
+	"github.com/maktoobgar/go_template/pkg/errors/messages"
 )
 
 type (

@@ -35,7 +35,7 @@ type logBundle struct {
 // a *Logger
 //
 // If no address in `opt.Path` is provided, for linux users:
-// "/var/log/gotorn" and for windows users "c:\\logs\gotorn"
+// "/var/log/project" and for windows users "c:\\logs\project"
 // address will be used as default path
 func New(opt *Option) (Logger, error) {
 	if opt == nil {
@@ -44,9 +44,9 @@ func New(opt *Option) (Logger, error) {
 
 	if opt.Path == "" {
 		if runtime.GOOS == "linux" {
-			opt.Path = "/var/log/gotorn"
+			opt.Path = "/var/log/project"
 		} else if runtime.GOOS == "windows" {
-			opt.Path = "c:\\\\logs\\gotorn"
+			opt.Path = "c:\\\\logs\\project"
 		} else {
 			return nil, errOperationSystemNotSupported
 		}

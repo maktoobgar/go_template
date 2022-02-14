@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/gotorn/core/internal/app"
-	"github.com/gotorn/core/internal/config"
+	"github.com/maktoobgar/go_template/internal/app"
+	"github.com/maktoobgar/go_template/internal/config"
 )
 
 var (
