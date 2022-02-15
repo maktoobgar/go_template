@@ -16,18 +16,20 @@ If you think something is missing in this list, create an issue and inform us ab
 
 Global Goals ([<ins>**pkg**</ins>](./pkg)):
 - [ ] Add **GRPC** Package
-- [ ] Add **Http** And **Https** Package
-- [ ] Add **Socket** Package
+- [X] Add **Fiber** for http response Package
+- [ ] Add **Param** middleware inside **Fiber** package
 - [x] Add **Translator** Package
 - [x] Add **Logger** Package
 - [x] Add **Errors** Package
+- [x] Add **Config** Package
 
 Project Goals ([<ins>**internal**</ins>](./internal)):
-- [x] Add **Config** Package
-- [ ] Add **Services** To Project
+- [X] Add **Http** And **Https** Package
+- [X] Add **Global** Package
+- [X] Add **Socket** Package
+- [X] Add **Services** To Project
 - [ ] Add **Multi Database** Package To Database
 - [ ] Add **Query Handler**(Database) Feature To Database
-- [ ] Add **Middleware** Support To Project
-- [ ] Add A Way(A Tool Maybe) To Handle **Cors Policy**
-- [ ] Add **Param** Package To Handle Passed Params In Url
+- [X] Add **Middleware** Support To Project
+- [X] Add A Way(A Tool Maybe) To Handle **Cors Policy**
 - [ ] ...
