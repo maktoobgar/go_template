@@ -17,7 +17,6 @@ If you think something is missing in this list, create an issue and inform us ab
 Global Goals ([<ins>**pkg**</ins>](./pkg)):
 - [X] Add **GRPC** Package
 - [X] Add **Fiber** for http response Package
-- [ ] Add **Param** middleware inside **Fiber** package
 - [x] Add **Translator** Package
 - [x] Add **Logger** Package
 - [x] Add **Errors** Package
