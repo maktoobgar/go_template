@@ -5,6 +5,7 @@ import (
 
 	"github.com/maktoobgar/go_template/internal/app"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
+	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/pkg/config"
 )
 
@@ -23,6 +24,7 @@ func initializeConfigs() {
 	}
 
 	config.SetConfig(cfg)
+	g.CFG = cfg
 }
 
 // Server initialization

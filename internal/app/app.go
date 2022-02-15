@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/maktoobgar/go_template/internal/config"
+	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/routers"
 	"github.com/maktoobgar/go_template/pkg/api"
 	"github.com/maktoobgar/go_template/pkg/logging"
@@ -17,26 +18,28 @@ var (
 
 func Run(cfg *config.Config) error {
 	// Translator initialization
-	translator, err := translator.New(cfg.Translator.Path, languages[0], languages[1:]...)
+	t, err := translator.New(cfg.Translator.Path, languages[0], languages[1:]...)
 	if err != nil {
 		return err
 	}
-	_ = translator
+	g.Translator = t.(*translator.TranslatorPack)
 
 	// Logger initialization
 	k := cfg.Logging
 	l := logging.Option(k)
-	logger, err := logging.New(&l)
+	log, err := logging.New(&l)
 	if err != nil {
 		return err
 	}
-	_ = logger
+	g.Logger = log.(*logging.LogBundle)
 
 	// Run App
 	app := api.New("Brand New Game")
+	g.App = app
+
 	routers.SetDefaultSettings(app)
 	routers.AddRoutes(app)
-	logger.Panic(app.Listen(fmt.Sprintf("%s:%s", cfg.Api.IP, cfg.Api.Port)).Error(), Run, nil)
+	g.Log().Panic(app.Listen(fmt.Sprintf("%s:%s", cfg.Api.IP, cfg.Api.Port)).Error(), Run, nil)
 
 	return nil
 }
