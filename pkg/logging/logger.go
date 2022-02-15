@@ -24,7 +24,7 @@ var (
 )
 
 // Struct that will returns in `New` function
-type logBundle struct {
+type LogBundle struct {
 	inf *logrus.Logger
 	war *logrus.Logger
 	err *logrus.Logger
@@ -56,7 +56,7 @@ func New(opt *Option) (Logger, error) {
 		return nil, err
 	}
 
-	l := &logBundle{
+	l := &LogBundle{
 		inf: logrus.New(),
 		war: logrus.New(),
 		err: logrus.New(),
@@ -194,7 +194,7 @@ func createAddress(address string) error {
 //
 // Put your message in `message` variable and write your current function in `function`
 // and if you need to print some more parameters, put them inside `params` variable
-func (l *logBundle) Info(message string, function interface{}, params map[string]interface{}) {
+func (l *LogBundle) Info(message string, function interface{}, params map[string]interface{}) {
 	l.inf.WithFields(logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
@@ -206,7 +206,7 @@ func (l *logBundle) Info(message string, function interface{}, params map[string
 //
 // Put your message in `message` variable and write your current function in `function`
 // and if you need to print some more parameters, put them inside `params` variable
-func (l *logBundle) Warning(message string, function interface{}, params map[string]interface{}) {
+func (l *LogBundle) Warning(message string, function interface{}, params map[string]interface{}) {
 	l.war.WithFields(logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
@@ -218,7 +218,7 @@ func (l *logBundle) Warning(message string, function interface{}, params map[str
 //
 // Put your message in `message` variable and write your current function in `function`
 // and if you need to print some more parameters, put them inside `params` variable
-func (l *logBundle) Error(message string, function interface{}, params map[string]interface{}) {
+func (l *LogBundle) Error(message string, function interface{}, params map[string]interface{}) {
 	l.err.WithFields(logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
@@ -230,7 +230,7 @@ func (l *logBundle) Error(message string, function interface{}, params map[strin
 //
 // Put your message in `message` variable and write your current function in `function`
 // and if you need to print some more parameters, put them inside `params` variable
-func (l *logBundle) Panic(message string, function interface{}, params map[string]interface{}) {
+func (l *LogBundle) Panic(message string, function interface{}, params map[string]interface{}) {
 	l.pan.WithFields(logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
