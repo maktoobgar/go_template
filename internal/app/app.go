@@ -1,7 +1,11 @@
 package app
 
 import (
+	"fmt"
+
 	"github.com/maktoobgar/go_template/internal/config"
+	"github.com/maktoobgar/go_template/internal/routers"
+	"github.com/maktoobgar/go_template/pkg/api"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
 	"golang.org/x/text/language"
@@ -27,6 +31,12 @@ func Run(cfg *config.Config) error {
 		return err
 	}
 	_ = logger
+
+	// Run App
+	app := api.New("Brand New Game")
+	routers.SetDefaultSettings(app)
+	routers.AddRoutes(app)
+	logger.Panic(app.Listen(fmt.Sprintf("%s:%s", cfg.Api.IP, cfg.Api.Port)).Error(), Run, nil)
 
 	return nil
 }

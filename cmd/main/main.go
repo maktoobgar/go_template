@@ -4,11 +4,12 @@ import (
 	"log"
 
 	"github.com/maktoobgar/go_template/internal/app"
-	"github.com/maktoobgar/go_template/internal/config"
+	iconfig "github.com/maktoobgar/go_template/internal/config"
+	"github.com/maktoobgar/go_template/pkg/config"
 )
 
 var (
-	cfg = &config.Config{}
+	cfg = &iconfig.Config{}
 )
 
 // Initialization for config files in configs folder

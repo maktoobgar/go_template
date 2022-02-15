@@ -17,3 +17,7 @@ logging:
   max_age: "720h" # One month
   rotation_time: "24h"
   rotation_size: "20MB"
+
+api:
+  ip: 127.0.0.1
+  port: 3000

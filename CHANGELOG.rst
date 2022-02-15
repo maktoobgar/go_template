@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(fiber): fiber added as http and socker respose
 * ``README``, ``CHANGELOG`` and ``LICENSE`` added.
 * ``Translator`` package added.
 * ``Errors`` package added.
