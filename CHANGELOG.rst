@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(feat): grpc support added
 * 🎉 feat(middlewares-services): middlewares and services added
 * 🎉 feat(global): global package added
 * 🎉 feat(fiber): fiber added as http and socker respose

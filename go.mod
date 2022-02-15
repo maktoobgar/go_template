@@ -18,6 +18,7 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fasthttp/websocket v1.4.6 // indirect
 	github.com/gofiber/websocket/v2 v2.0.16 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/klauspost/compress v1.14.2 // indirect
 	github.com/lestrrat-go/strftime v1.0.5 // indirect
@@ -26,5 +27,9 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.33.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
+	google.golang.org/genproto v0.0.0-20220211171837-173942840c17 // indirect
+	google.golang.org/grpc v1.44.0 // indirect
+	google.golang.org/protobuf v1.27.1 // indirect
 )

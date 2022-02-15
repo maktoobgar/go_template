@@ -3,9 +3,9 @@ package routers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/maktoobgar/go_template/internal/middleware"
-	"github.com/maktoobgar/go_template/internal/services"
+	httpHandler "github.com/maktoobgar/go_template/internal/services/http"
 )
 
-func AddRoutes(app *fiber.App) {
-	app.Group("/api", middleware.Useless).Get(":name?", services.Hi).Name("Hi")
+func Http(app *fiber.App) {
+	app.Group("/api", middleware.Useless).Get(":name?", httpHandler.Hi).Name("Hi")
 }

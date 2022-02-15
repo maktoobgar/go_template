@@ -6,6 +6,7 @@ type (
 		Translator Translator `yaml:"translator"`
 		Logging    Logging    `yaml:"logging"`
 		Api        Api        `yaml:"api"`
+		Grpc       Grpc       `yaml:"grpc"`
 	}
 
 	Database struct {
@@ -32,6 +33,11 @@ type (
 	}
 
 	Api struct {
+		IP   string `yaml:"ip"`
+		Port string `yaml:"port"`
+	}
+
+	Grpc struct {
 		IP   string `yaml:"ip"`
 		Port string `yaml:"port"`
 	}

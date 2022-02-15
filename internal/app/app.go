@@ -33,12 +33,16 @@ func Run(cfg *config.Config) error {
 	}
 	g.Logger = log.(*logging.LogBundle)
 
+	// Run Grpc
+	go grpcRun()
+
 	// Run App
 	app := api.New("Brand New Game")
 	g.App = app
 
 	routers.SetDefaultSettings(app)
-	routers.AddRoutes(app)
+	routers.Http(app)
+	routers.Ws(app)
 	g.Log().Panic(app.Listen(fmt.Sprintf("%s:%s", cfg.Api.IP, cfg.Api.Port)).Error(), Run, nil)
 
 	return nil
