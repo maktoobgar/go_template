@@ -15,7 +15,7 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
 If you think something is missing in this list, create an issue and inform us about it.
 
 Global Goals ([<ins>**pkg**</ins>](./pkg)):
-- [ ] Add **GRPC** Package
+- [X] Add **GRPC** Package
 - [X] Add **Fiber** for http response Package
 - [ ] Add **Param** middleware inside **Fiber** package
 - [x] Add **Translator** Package
