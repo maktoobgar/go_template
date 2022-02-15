@@ -45,8 +45,6 @@ var (
 //
 // If `address` == "", on linux we will set address to "build/translations" and
 // on windows address is "build\translations\"
-//
-// TODO: Test for windows required
 func New(address string, defaultLanguage language.Tag, languages ...language.Tag) (Translator, error) {
 	path = address
 

@@ -118,8 +118,6 @@ func getLoggerWriter(opt *Option, i *int) (io.Writer, error) {
 
 // If required addresses for logs to create do not exist, will create them and
 // makes sure they are accessable
-//
-// TODO: Test for windows required
 func createAddress(address string) error {
 	var (
 		addr    string = ""
