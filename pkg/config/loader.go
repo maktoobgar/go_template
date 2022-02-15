@@ -17,13 +17,13 @@ const (
 
 var (
 	// Main project configs
-	cfg                     *Config
+	cfg                     interface{}
 	ErrUnknownFileExtention error = errors.New("unknown file extention")
 )
 
 // Checks if extention of the file is supported or not and if supported
 // its configurations will be read and will be saved in cfg variable
-func Parse(path string, cfg *Config, errorOnFileNotFound bool) error {
+func Parse(path string, cfg interface{}, errorOnFileNotFound bool) error {
 	switch filepath.Ext(path) {
 	case ".yaml", ".yml":
 		return parseYaml(path, cfg, errorOnFileNotFound)
@@ -33,9 +33,7 @@ func Parse(path string, cfg *Config, errorOnFileNotFound bool) error {
 }
 
 // Reads "address_to_config_folder/config.yaml" file and save them in `cfg` variable
-//
-// TODO: This function does not support windows address
-func ReadProjectConfigs(cfg *Config) error {
+func ReadProjectConfigs(cfg interface{}) error {
 	if err := Parse(address+"config.yaml", cfg, true); err != nil {
 		return err
 	}
@@ -43,9 +41,7 @@ func ReadProjectConfigs(cfg *Config) error {
 }
 
 // Reads "env.yaml" config file(if exists) and save them in `cfg` variable
-//
-// TODO: This function does not support windows address
-func ReadLocalConfigs(cfg *Config) error {
+func ReadLocalConfigs(cfg interface{}) error {
 	if err := Parse("env.yaml", cfg, false); err != nil {
 		return err
 	}
@@ -53,12 +49,12 @@ func ReadLocalConfigs(cfg *Config) error {
 }
 
 // Gets the `conf` pointer and makes `cfg` global variable to point out where `conf` points
-func SetConfig(conf *Config) {
+func SetConfig(conf interface{}) {
 	cfg = conf
 }
 
 // Parses configuration data of a yaml file
-func parseYaml(path string, cfg *Config, errorOnFileNotFound bool) error {
+func parseYaml(path string, cfg interface{}, errorOnFileNotFound bool) error {
 	file, err := os.Open(path)
 	if err != nil {
 		if errorOnFileNotFound {

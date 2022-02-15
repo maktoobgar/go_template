@@ -5,6 +5,7 @@ type (
 		Database   Database   `yaml:"database"`
 		Translator Translator `yaml:"translator"`
 		Logging    Logging    `yaml:"logging"`
+		Api        Api        `yaml:"api"`
 	}
 
 	Database struct {
@@ -28,5 +29,10 @@ type (
 		MaxAge       string `yaml:"max_age"`
 		RotationTime string `yaml:"rotation_time"`
 		RotationSize string `yaml:"rotation_size"`
+	}
+
+	Api struct {
+		IP   string `yaml:"ip"`
+		Port string `yaml:"port"`
 	}
 )
