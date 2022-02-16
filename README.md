@@ -23,12 +23,14 @@ Global Goals ([<ins>**pkg**</ins>](./pkg)):
 - [x] Add **Config** Package
 
 Project Goals ([<ins>**internal**</ins>](./internal)):
-- [X] Add **Http** And **Https** Package
-- [X] Add **Global** Package
-- [X] Add **Socket** Package
-- [X] Add **Services** To Project
-- [ ] Add **Multi Database** Package To Database
-- [ ] Add **Query Handler**(Database) Feature To Database
+- [X] Add **Global** To Project
+- [X] Add **Socket** To Project
+- [ ] Add **Services** To Project
+- [X] Add **Handlers** To Project
+- [X] Add **Multi Database** To Project
+- [X] Add **Query Builder** To Project
+- [X] Add **Migration Handler** To Project
 - [X] Add **Middleware** Support To Project
-- [X] Add A Way(A Tool Maybe) To Handle **Cors Policy**
+- [X] Add **Cors Policy** Support To Project
+- [X] Add **CSRF** Support To Project
 - [ ] ...
