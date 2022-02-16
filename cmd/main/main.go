@@ -1,39 +1,22 @@
 package main
 
 import (
-	"log"
+	"flag"
+	"strings"
 
 	"github.com/maktoobgar/go_template/internal/app"
-	iconfig "github.com/maktoobgar/go_template/internal/config"
-	g "github.com/maktoobgar/go_template/internal/global"
-	"github.com/maktoobgar/go_template/pkg/config"
 )
 
 var (
-	cfg = &iconfig.Config{}
+	whichApp = flag.String("app", "fiber", "defines which app to run")
 )
 
-// Initialization for config files in configs folder
-func initializeConfigs() {
-	if err := config.ReadProjectConfigs(cfg); err != nil {
-		log.Fatalln(err)
-	}
-
-	if err := config.ReadLocalConfigs(cfg); err != nil {
-		log.Fatalln(err)
-	}
-
-	config.SetConfig(cfg)
-	g.CFG = cfg
-}
-
-// Server initialization
-func init() {
-	initializeConfigs()
-}
-
 func main() {
-	if err := app.Run(cfg); err != nil {
-		log.Fatalln(err)
+	flag.Parse()
+	w := strings.ToLower(*whichApp)
+	if w == "fiber" || w == "f" || w == "0" {
+		app.Fiber()
+	} else if w == "grpc" || w == "g" || w == "1" {
+		app.Grpc()
 	}
 }

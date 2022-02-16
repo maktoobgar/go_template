@@ -4,16 +4,15 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(querybuilder): query builder feature added
 * 🎉 feat(feat): grpc support added
 * 🎉 feat(middlewares-services): middlewares and services added
 * 🎉 feat(global): global package added
-* 🎉 feat(fiber): fiber added as http and socker respose
-* ``README``, ``CHANGELOG`` and ``LICENSE`` added.
-* ``Translator`` package added.
-* ``Errors`` package added.
-* ``Logging`` package added.
-* Internal ``Config`` package added.
-* Debugging on all ``Translator``, ``Errors`` and ``Logging`` packages.
+* 🎉 feat(fiber): fiber added as http and socket response
+* 🎉 feat(translator): translator package added
+* 🎉 feat(errors): errors package added
+* 🎉 feat(logging): logging package added
+* 🎉 feat(config): config package added
 
 
 .. 6.0.0 (2021-10-20)

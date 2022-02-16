@@ -12,3 +12,7 @@ go.sum
 # vscode
 
 .vscode
+
+# database
+*.db
+sqlite3

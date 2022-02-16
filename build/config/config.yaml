@@ -1,12 +1,18 @@
-database:
-  username: "postgres"
-  password: "M123456789H"
-  db_name: "project_db"
-  host: "127.0.0.1"
-  port: 5432
-  ssl_mode: "disable"
-  time_zone: "Asia/Tehran"
-  charset: "utf8mb4"
+databases:
+  - type: "sqlite3"
+    name: "main"
+    db_name: "test.db"
+
+  # - name: "main"
+  #   type: "postgres"
+  #   username: "postgres"
+  #   password: "M123456789H"
+  #   db_name: "project_db"
+  #   host: "127.0.0.1"
+  #   port: 5432
+  #   ssl_mode: "disable"
+  #   time_zone: "Asia/Tehran"
+  #   charset: "utf8mb4"
 
 translator:
   path: "build/translations"

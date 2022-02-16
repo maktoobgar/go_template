@@ -6,10 +6,11 @@ import (
 	"github.com/maktoobgar/go_template/pkg/grpc"
 )
 
-func grpcRun() {
+func Grpc() {
 	s := grpc.New()
 
+	// Register handlers
 	hello.New(s)
 
-	grpc.Run(s, g.CFG.Grpc.Port)
+	grpc.Run(s, g.CFG.Grpc.IP, g.CFG.Grpc.Port)
 }

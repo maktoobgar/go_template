@@ -2,7 +2,8 @@ package config
 
 type (
 	Config struct {
-		Database   Database   `yaml:"database"`
+		Databases  []Database `yaml:"databases"`
+		Postgres   Database   `yaml:"postgres"`
 		Translator Translator `yaml:"translator"`
 		Logging    Logging    `yaml:"logging"`
 		Api        Api        `yaml:"api"`
@@ -10,6 +11,8 @@ type (
 	}
 
 	Database struct {
+		Name     string `yaml:"name"`
+		Type     string `yaml:"type"`
 		Username string `yaml:"username"`
 		Password string `yaml:"password"`
 		DBName   string `yaml:"db_name"`
