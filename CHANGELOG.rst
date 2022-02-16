@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(migration): sql-migrate commandline migration handler added
 * 🎉 feat(querybuilder): query builder feature added
 * 🎉 feat(feat): grpc support added
 * 🎉 feat(middlewares-services): middlewares and services added
