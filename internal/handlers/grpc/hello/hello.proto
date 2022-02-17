@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package helloworld;
 
-option go_package = "github.com/maktoobgar/go_template/internal/services/grpc/hello";
+option go_package = "github.com/maktoobgar/go_template/internal/handlers/grpc/hello";
 
 // The greeting service definition.
 service Greeter {

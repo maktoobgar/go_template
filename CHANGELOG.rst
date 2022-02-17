@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(services): services and csrf added
 * 🎉 feat(session): session feature added
 * 🎉 feat(migration): added support for different databases for migration
 * 🎉 feat(migration): sql-migrate commandline migration handler added

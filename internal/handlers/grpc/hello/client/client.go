@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	pb "github.com/maktoobgar/go_template/internal/services/grpc/hello"
+	pb "github.com/maktoobgar/go_template/internal/handlers/grpc/hello"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
