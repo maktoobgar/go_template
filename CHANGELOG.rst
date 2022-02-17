@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: autoincrement for users table fixed
 * 🐛 fix: circular import fixed
 * 🐛 fix: some debugs happened
 * 🎉 feat(services): services and csrf added

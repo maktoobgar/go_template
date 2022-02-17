@@ -1,7 +1,7 @@
 
 -- +migrate Up
 CREATE TABLE users (
-    id int AUTO_INCREMENT NOT NULL UNIQUE PRIMARY KEY,
+    id INTEGER NOT NULL UNIQUE PRIMARY KEY AUTOINCREMENT,
     username varchar(64) NOT NULL UNIQUE,
     password varchar(255) NOT NULL,
     display_name varchar(128) NOT NULL,
