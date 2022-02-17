@@ -4,13 +4,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
-	"github.com/gofiber/fiber/v2/middleware/session"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
 	g "github.com/maktoobgar/go_template/internal/global"
-	session_service "github.com/maktoobgar/go_template/internal/services/session"
 	"github.com/maktoobgar/go_template/pkg/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
@@ -52,16 +49,6 @@ func initializeConfigs() {
 	g.CFG = cfg
 }
 
-func initializeSession() {
-	g.Session = session.New(session.Config{
-		Expiration:   (time.Hour * 24) * 7,
-		Storage:      session_service.New(),
-		KeyLookup:    "header:session_id",
-		CookieSecure: !g.CFG.Debug,
-		CookieDomain: g.CFG.Domain,
-	})
-}
-
 // Translator initialization
 func initialTranslator() {
 	t, err := translator.New(filepath.Join(cfg.PWD, cfg.Translator.Path), languages[0], languages[1:]...)
@@ -93,7 +80,6 @@ func intialDBs() {
 // Server initialization
 func init() {
 	initializeConfigs()
-	initializeSession()
 	initialTranslator()
 	initialLogger()
 	intialDBs()
