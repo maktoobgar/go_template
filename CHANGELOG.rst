@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(migration): added support for different databases for migration
 * 🎉 feat(migration): sql-migrate commandline migration handler added
 * 🎉 feat(querybuilder): query builder feature added
 * 🎉 feat(feat): grpc support added

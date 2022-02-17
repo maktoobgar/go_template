@@ -15,4 +15,4 @@ go.sum
 
 # database
 *.db
-sqlite3
+dbconfig.yml

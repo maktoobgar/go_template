@@ -2,3 +2,22 @@ development:
   dialect: sqlite3
   datasource: test.db
   dir: migrations/sqlite3
+  table: migrations
+
+mysql:
+  dialect: mysql
+  datasource: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(${MYSQL_HOST}:${MYSQL_PORT})/${DATABASE_NAME}?parseTime=true
+  dir: migrations/mysql
+  table: migrations
+
+mssql:
+  dialect: mssql
+  datasource: server=${MSSQL_HOST};user id=${MSSQL_USER};password=${MSSQL_PASSWORD};port=${MSSQL_PORT};database=${DATABASE_NAME};
+  dir: migrations/mssql
+  table: migrations
+
+postgres:
+  dialect: postgres
+  datasource: host=${POSTGRES_HOST} port=${POSTGRES_PORT} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} dbname=${DATABASE_NAME} sslmode=disabled
+  dir: migrations/postgres
+  table: migrations
