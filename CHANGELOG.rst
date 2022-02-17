@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: sessions now work fine
 * 🐛 fix: autoincrement for users table fixed
 * 🐛 fix: circular import fixed
 * 🐛 fix: some debugs happened

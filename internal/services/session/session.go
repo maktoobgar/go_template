@@ -73,7 +73,6 @@ func (c *sessionService) Set(key string, val []byte, ttl time.Duration) error {
 		{
 			Key:        key,
 			Value:      string(val),
-			UserID:     0,
 			ExpireDate: t,
 		},
 	}
