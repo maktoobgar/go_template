@@ -8,6 +8,9 @@ type (
 		Logging    Logging    `yaml:"logging"`
 		Api        Api        `yaml:"api"`
 		Grpc       Grpc       `yaml:"grpc"`
+		Debug      bool       `yaml:"debug"`
+		Domain     string     `yaml:"domain"`
+		PWD        string     `yaml:"pwd"`
 	}
 
 	Database struct {

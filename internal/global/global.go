@@ -5,6 +5,7 @@ import (
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
@@ -16,6 +17,7 @@ var CFG *config.Config = nil
 // Utilities
 var Logger *logging.LogBundle = nil
 var Translator *translator.TranslatorPack = nil
+var Session *session.Store = nil
 
 // App
 var App *fiber.App = nil

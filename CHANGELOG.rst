@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat(session): session feature added
 * 🎉 feat(migration): added support for different databases for migration
 * 🎉 feat(migration): sql-migrate commandline migration handler added
 * 🎉 feat(querybuilder): query builder feature added
