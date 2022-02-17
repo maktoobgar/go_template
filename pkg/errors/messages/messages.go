@@ -1,6 +1,6 @@
 package messages
 
 const (
-	ErrorGeneral         = "ErrorGeneral"
-	ErrorMessageNotFound = "ErrorMessageNotFound"
+	ErrorGeneral  = "ErrorGeneral"
+	ErrorNotFound = "ErrorNotFound"
 )

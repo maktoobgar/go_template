@@ -42,9 +42,11 @@ func New(dbs map[string]Database) (map[string]*goqu.Database, map[string]*sql.DB
 		case "mysql":
 			config = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", v.Username, v.Password, v.Host, v.Port, v.DbName)
 		case "sqlite3":
-			_, err := os.Create(v.DbName)
-			if err != nil {
-				return nil, nil, err
+			if _, err := os.Stat(v.DbName); err != nil {
+				_, err := os.Create(v.DbName)
+				if err != nil {
+					return nil, nil, err
+				}
 			}
 			config = fmt.Sprintf("file:%s?cache=shared&mode=rw", v.DbName)
 		case "postgres":

@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	httpHandler "github.com/maktoobgar/go_template/internal/handlers/http"
 	"github.com/maktoobgar/go_template/internal/middleware"
-	httpHandler "github.com/maktoobgar/go_template/internal/services/http"
 )
 
 func Http(app *fiber.App) {

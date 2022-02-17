@@ -33,16 +33,16 @@ func Parse(path string, cfg interface{}, errorOnFileNotFound bool) error {
 }
 
 // Reads "address_to_config_folder/config.yaml" file and save them in `cfg` variable
-func ReadProjectConfigs(cfg interface{}) error {
-	if err := Parse(address+"config.yaml", cfg, true); err != nil {
+func ReadProjectConfigs(pwd string, cfg interface{}) error {
+	if err := Parse(filepath.Join(pwd, address, "config.yaml"), cfg, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 // Reads "env.yaml" config file(if exists) and save them in `cfg` variable
-func ReadLocalConfigs(cfg interface{}) error {
-	if err := Parse("env.yaml", cfg, false); err != nil {
+func ReadLocalConfigs(pwd string, cfg interface{}) error {
+	if err := Parse(filepath.Join(pwd, "env.yaml"), cfg, false); err != nil {
 		return err
 	}
 	return nil

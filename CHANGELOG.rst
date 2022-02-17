@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: some debugs happened
 * 🎉 feat(services): services and csrf added
 * 🎉 feat(session): session feature added
 * 🎉 feat(migration): added support for different databases for migration

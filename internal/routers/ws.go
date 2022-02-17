@@ -3,7 +3,7 @@ package routers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
-	wsHandlers "github.com/maktoobgar/go_template/internal/services/socket"
+	wsHandlers "github.com/maktoobgar/go_template/internal/handlers/socket"
 )
 
 func Ws(app *fiber.App) {

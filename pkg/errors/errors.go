@@ -50,7 +50,7 @@ func HttpError(e error) (string, int) {
 
 	httpCode, ok := httpErrors[err.code]
 	if !ok {
-		return messages.ErrorMessageNotFound, httpErrors[InvalidStatus]
+		return messages.ErrorNotFound, httpErrors[InvalidStatus]
 	}
 
 	return err.message, httpCode
