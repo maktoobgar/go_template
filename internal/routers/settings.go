@@ -14,7 +14,8 @@ func SetDefaultSettings(app *fiber.App) {
 			AllowOrigins: "*",
 		}),
 		csrf.New(csrf.Config{
-			KeyLookup:    "header:csrf",
+			Next:         csrf_service.Next,
+			KeyLookup:    "form:csrf",
 			CookieName:   "csrf",
 			CookieSecure: !g.CFG.Debug,
 			CookieDomain: g.CFG.Domain,

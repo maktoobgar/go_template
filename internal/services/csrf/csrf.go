@@ -1,6 +1,7 @@
 package csrf_service
 
 import (
+	"strings"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -15,51 +16,41 @@ type csrfService struct{}
 var errDataNotFound = errors.New(errors.NotFoundStatus, "requested data does not exist")
 var errDataDuplication = errors.New(errors.NotFoundStatus, "the same data exist")
 
-var obj *csrfService = &csrfService{}
+var instance *csrfService = &csrfService{}
 
-func (c *csrfService) get_value(key string) (*models.CSRF, error) {
-	scanner, err := g.DB.From(models.CSRFName).Where(
+func (obj *csrfService) get_value(key string) (*models.CSRF, error) {
+	csrfObj := &models.CSRF{}
+	ok, _ := g.DB.From(models.CSRFName).Limit(1).Where(
 		goqu.Ex{"key": key},
-	).Executor().Scanner()
-	if err != nil {
-		return nil, err
+	).Executor().ScanStruct(csrfObj)
+	if !ok {
+		return nil, errDataNotFound
 	}
 
-	obj := &models.CSRF{}
-	if scanner.Next() {
-		err = scanner.ScanStruct(obj)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		return nil, err
-	}
-	scanner.Close()
-
-	return obj, nil
+	return csrfObj, nil
 }
 
 // Get gets the value for the given key.
 // It returns ErrNotFound if the storage does not contain the key.
-func (c *csrfService) Get(key string) ([]byte, error) {
-	obj, err := c.get_value(key)
-	if err != nil || obj == nil {
+func (obj *csrfService) Get(key string) ([]byte, error) {
+	csrfObj, err := obj.get_value(key)
+	if err != nil {
 		return nil, errDataNotFound
 	}
 
-	if obj.ExpireDate.Unix() < time.Now().Unix() {
-		c.Delete(key)
+	if csrfObj.ExpireDate.Unix() < time.Now().Unix() {
+		obj.Delete(key)
 		return nil, errDataNotFound
 	}
 
-	return []byte(obj.Value), nil
+	return []byte(csrfObj.Value), nil
 }
 
 // Set stores the given value for the given key along with a
 // time-to-live expiration value, 0 means live for ever
 // Empty key or value will be ignored without an error.
-func (c *csrfService) Set(key string, val []byte, ttl time.Duration) error {
-	v, _ := c.Get(key)
+func (obj *csrfService) Set(key string, val []byte, ttl time.Duration) error {
+	v, _ := obj.Get(key)
 	if v != nil {
 		return errDataDuplication
 	}
@@ -85,7 +76,7 @@ func (c *csrfService) Set(key string, val []byte, ttl time.Duration) error {
 
 // Delete deletes the value for the given key.
 // It returns no error if the storage does not contain the key,
-func (c *csrfService) Delete(key string) error {
+func (obj *csrfService) Delete(key string) error {
 	_, err := g.DB.Delete(models.CSRFName).Where(goqu.Ex{
 		"key": key,
 	}).Executor().Exec()
@@ -97,7 +88,7 @@ func (c *csrfService) Delete(key string) error {
 }
 
 // Reset resets the storage and delete all keys.
-func (c *csrfService) Reset() error {
+func (obj *csrfService) Reset() error {
 	_, err := g.DB.Delete(models.CSRFName).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, err.Error())
@@ -108,10 +99,14 @@ func (c *csrfService) Reset() error {
 
 // Close closes the storage and will stop any running garbage
 // collectors and open connections.
-func (c *csrfService) Close() error {
+func (obj *csrfService) Close() error {
 	return nil
 }
 
+func Next(c *fiber.Ctx) bool {
+	return strings.Contains(c.Path(), "/api/")
+}
+
 func New() fiber.Storage {
-	return obj
+	return instance
 }
