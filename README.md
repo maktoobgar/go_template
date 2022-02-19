@@ -27,6 +27,7 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
 - [X] Add **Socket** To Project
 - [X] Add **Services** To Project
 - [X] Add **Session** To Project
+- [ ] Add **JWT** To Project
 - [X] Add **Handlers** To Project
 - [X] Add **Multi Database** To Project
 - [X] Add **Query Builder** To Project
@@ -34,4 +35,5 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
 - [X] Add **Middleware** Support To Project
 - [X] Add **Cors Policy** Support To Project
 - [X] Add **CSRF** Support To Project
-- [X] Add **Authentication System** Support To Project
+- [X] Add **Session Authentication System** Support To Project
+- [ ] Add **JWT Authentication System** Support To Project
