@@ -1,4 +1,4 @@
-package session_service
+package tests
 
 import (
 	"os/exec"
@@ -6,6 +6,7 @@ import (
 	"time"
 
 	_ "github.com/maktoobgar/go_template/internal/app/load"
+	session_service "github.com/maktoobgar/go_template/internal/services/session"
 )
 
 func TestSession(t *testing.T) {
@@ -16,7 +17,7 @@ func TestSession(t *testing.T) {
 		return
 	}
 
-	session := New()
+	session := session_service.New()
 	value := []byte("asdawewrtergfgdmgkdrg4r5")
 	key := "m"
 
