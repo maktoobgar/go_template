@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: authentication system added
 * 🎉 feat(users-service): users service added
 * ✅ test: all test cases for services now are in `test` folder
 * 🐛 fix: sessions now work fine

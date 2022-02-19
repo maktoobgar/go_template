@@ -1,6 +1,7 @@
 package session_service
 
 import (
+	"encoding/hex"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -8,59 +9,53 @@ import (
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/errors/messages"
 )
 
 type sessionService struct{}
 
-var errDataNotFound = errors.New(errors.NotFoundStatus, "requested data does not exist")
-var errDataDuplication = errors.New(errors.NotFoundStatus, "the same data exist")
+var errDataNotFound = errors.New(errors.NotFoundStatus, messages.ErrDataNotFound)
+var errDataDuplication = errors.New(errors.NotFoundStatus, messages.ErrDataDuplication)
 
-var obj *sessionService = &sessionService{}
+var instance = &sessionService{}
 
-func (c *sessionService) get_value(key string) (*models.Session, error) {
-	scanner, err := g.DB.From(models.SessionName).Where(
+func (obj *sessionService) get_value(key string) (*models.Session, error) {
+	sessionObj := &models.Session{}
+	ok, _ := g.DB.From(models.SessionName).Limit(1).Where(
 		goqu.Ex{"key": key},
-	).Executor().Scanner()
-	if err != nil {
-		return nil, err
+	).Executor().ScanStruct(sessionObj)
+	if !ok {
+		return nil, errDataNotFound
 	}
 
-	obj := &models.Session{}
-	if scanner.Next() {
-		err = scanner.ScanStruct(obj)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		return nil, err
-	}
-	scanner.Close()
-
-	return obj, nil
+	return sessionObj, nil
 }
 
 // Get gets the value for the given key.
 // It returns ErrNotFound if the storage does not contain the key.
-func (c *sessionService) Get(key string) ([]byte, error) {
-	obj, err := c.get_value(key)
+func (obj *sessionService) Get(key string) ([]byte, error) {
+	session, err := obj.get_value(key)
+	if err != nil {
+		return nil, err
+	}
 
-	if err != nil || obj == nil {
+	if session.ExpireDate.Unix() < time.Now().Unix() {
+		obj.Delete(key)
 		return nil, errDataNotFound
 	}
 
-	if obj.ExpireDate.Unix() < time.Now().Unix() {
-		c.Delete(key)
-		return nil, errDataNotFound
+	res, err := hex.DecodeString(session.Value)
+	if err != nil {
+		return nil, errors.New(errors.UnexpectedStatus, err.Error())
 	}
-
-	return []byte(obj.Value), nil
+	return res, nil
 }
 
 // Set stores the given value for the given key along with a
 // time-to-live expiration value, 0 means live for ever
 // Empty key or value will be ignored without an error.
-func (c *sessionService) Set(key string, val []byte, ttl time.Duration) error {
-	v, _ := c.Get(key)
+func (obj *sessionService) Set(key string, val []byte, ttl time.Duration) error {
+	v, _ := obj.Get(key)
 	if v != nil {
 		return errDataDuplication
 	}
@@ -72,10 +67,11 @@ func (c *sessionService) Set(key string, val []byte, ttl time.Duration) error {
 	sessions := []models.Session{
 		{
 			Key:        key,
-			Value:      string(val),
+			Value:      hex.EncodeToString(val),
 			ExpireDate: t,
 		},
 	}
+
 	_, err := g.DB.Insert(models.SessionName).Rows(sessions).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, err.Error())
@@ -86,7 +82,7 @@ func (c *sessionService) Set(key string, val []byte, ttl time.Duration) error {
 
 // Delete deletes the value for the given key.
 // It returns no error if the storage does not contain the key,
-func (c *sessionService) Delete(key string) error {
+func (obj *sessionService) Delete(key string) error {
 	_, err := g.DB.Delete(models.SessionName).Where(goqu.Ex{
 		"key": key,
 	}).Executor().Exec()
@@ -98,7 +94,7 @@ func (c *sessionService) Delete(key string) error {
 }
 
 // Reset resets the storage and delete all keys.
-func (c *sessionService) Reset() error {
+func (obj *sessionService) Reset() error {
 	_, err := g.DB.Delete(models.SessionName).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, err.Error())
@@ -109,10 +105,10 @@ func (c *sessionService) Reset() error {
 
 // Close closes the storage and will stop any running garbage
 // collectors and open connections.
-func (c *sessionService) Close() error {
+func (obj *sessionService) Close() error {
 	return nil
 }
 
 func New() fiber.Storage {
-	return obj
+	return instance
 }
