@@ -6,7 +6,6 @@ import (
 )
 
 func Me(c *fiber.Ctx) error {
-	user := c.Locals("user").(models.User)
-	c.JSON(user.Clean())
-	return nil
+	user := c.Locals("user").(*models.User)
+	return c.JSON(user.Clean())
 }

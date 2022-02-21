@@ -9,22 +9,18 @@ import (
 )
 
 func SessionAuth(c *fiber.Ctx) error {
-	fmt.Println("here")
 	uService := user_service.New()
-	_, err := g.Session.Storage.Get(c.GetReqHeaders()["session_id"])
+	_, err := g.Session.Storage.Get(c.GetReqHeaders()["Session_id"])
 	if err != nil {
-		fmt.Println(err)
 		c.Redirect("SignIn")
 		return err
 	}
-	fmt.Println("here1")
 
 	session, err := g.Session.Get(c)
 	if err != nil {
 		c.Redirect("SignIn")
 		return err
 	}
-	fmt.Println("here2")
 
 	id := session.Get(session.ID()).(int)
 	user, err := uService.GetUserByID(fmt.Sprint(id))
@@ -32,7 +28,6 @@ func SessionAuth(c *fiber.Ctx) error {
 		c.Redirect("SignIn")
 		return err
 	}
-	fmt.Println("here3")
 
 	c.Locals("user", user)
 	return c.Next()

@@ -4,6 +4,8 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: signup handler and sessionAuth middleware bug fixed
+* 🎉 feat: signup and sessionAuth middleware bug fixed
 * 🎉 feat: sessionAuth added to authenticate user in middleware level by session_id
 * 🎉 feat: signin and me addresses added
 * 🎉 feat: authentication system added

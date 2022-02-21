@@ -4,23 +4,24 @@ import (
 	"github.com/gofiber/fiber/v2"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/handlers/utils"
-	auth_service "github.com/maktoobgar/go_template/internal/services/auth"
+	user_service "github.com/maktoobgar/go_template/internal/services/users"
 	"github.com/maktoobgar/go_template/pkg/errors"
 )
 
-type signInRequest struct {
-	Username string `json:"username" xml:"username" form:"username" required:"true"`
-	Password string `json:"password" xml:"password" form:"password" required:"true"`
+type signUpRequest struct {
+	Username    string `json:"username" xml:"username" form:"username" required:"true"`
+	Password    string `json:"password" xml:"password" form:"password" required:"true"`
+	DisplayName string `json:"display_name" xml:"display_name" form:"display_name" required:"true"`
 }
 
-func SignIn(c *fiber.Ctx) error {
-	req := &signInRequest{}
+func SignUp(c *fiber.Ctx) error {
+	uService := user_service.New()
+	req := &signUpRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
 		return errors.New(errors.InvalidStatus, "not all required fields provided")
 	}
 
-	auth := auth_service.New()
-	user, err := auth.SignIn(req.Username, req.Password)
+	user, err := uService.CreateUser(req.Username, req.Password, req.DisplayName)
 	if err != nil {
 		return err
 	}
@@ -31,12 +32,6 @@ func SignIn(c *fiber.Ctx) error {
 	}
 	defer session.Save()
 
-	if !session.Fresh() {
-		err = session.Regenerate()
-		if err != nil {
-			return err
-		}
-	}
 	session.Set(session.ID(), user.ID)
 
 	data := user.Clean()

@@ -20,4 +20,5 @@ func Http(app *fiber.App) {
 	// /api/auth
 	authGroup := apiGroup.Group("/auth")
 	authGroup.Post("/signIn", httpHandler.SignIn).Name("SignIn")
+	authGroup.Post("/signUp", httpHandler.SignUp).Name("SignUp")
 }
