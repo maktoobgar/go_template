@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: sessionAuth added to authenticate user in middleware level by session_id
 * 🎉 feat: signin and me addresses added
 * 🎉 feat: authentication system added
 * 🎉 feat(users-service): users service added

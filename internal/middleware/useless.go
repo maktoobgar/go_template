@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Useless(ctx *fiber.Ctx) error {
+func Useless(c *fiber.Ctx) error {
 	fmt.Println("middleware")
-	return ctx.Next()
+	return c.Next()
 }
