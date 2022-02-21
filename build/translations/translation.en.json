@@ -1,3 +1,21 @@
 {
-
+    "RequiresNotProvided": "not all required fields provided",
+    "Unauthorized": "authentication did not succeed",
+    "UnMatchPassword": "password doesn't match",
+    "DuplicateUser": "user already exists",
+    "InvalidCSRF": "csrf is not valid",
+    "ExpiredCSRF": "csrf is expired",
+    "DuplicateCSRF": "csrf already exists",
+    "CreationCSRFFailed": "csrf creation failed",
+    "DeletionCSRFFailed": "csrf deletion failed",
+    "ResetCSRFFailed": "csrf reset failed",
+    "InvalidSessionID": "session id is not valid",
+    "ExpiredSessionID": "session id is expired",
+    "DecodeFailure": "session is broken",
+    "DuplicateSession": "session already exists",
+    "CreationSessionFailed": "session creation failed",
+    "DeletionSessionFailed": "session deletion failed",
+    "ResetSessionFailed": "session reset failed",
+    "SignUpFailure": "sign up was not successful",
+    "UserNotFound": "requested user not found"
 }

@@ -13,9 +13,6 @@ import (
 
 type csrfService struct{}
 
-var errDataNotFound = errors.New(errors.NotFoundStatus, "requested data does not exist")
-var errDataDuplication = errors.New(errors.NotFoundStatus, "the same data exist")
-
 var instance *csrfService = &csrfService{}
 
 func (obj *csrfService) get_value(key string) (*models.CSRF, error) {
@@ -24,7 +21,7 @@ func (obj *csrfService) get_value(key string) (*models.CSRF, error) {
 		goqu.Ex{"key": key},
 	).Executor().ScanStruct(csrfObj)
 	if !ok {
-		return nil, errDataNotFound
+		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Translator.TranslateEN("InvalidCSRF"))
 	}
 
 	return csrfObj, nil
@@ -35,12 +32,12 @@ func (obj *csrfService) get_value(key string) (*models.CSRF, error) {
 func (obj *csrfService) Get(key string) ([]byte, error) {
 	csrfObj, err := obj.get_value(key)
 	if err != nil {
-		return nil, errDataNotFound
+		return nil, err
 	}
 
 	if csrfObj.ExpireDate.Unix() < time.Now().Unix() {
 		obj.Delete(key)
-		return nil, errDataNotFound
+		return nil, errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("ExpiredCSRF"))
 	}
 
 	return []byte(csrfObj.Value), nil
@@ -52,7 +49,7 @@ func (obj *csrfService) Get(key string) ([]byte, error) {
 func (obj *csrfService) Set(key string, val []byte, ttl time.Duration) error {
 	v, _ := obj.Get(key)
 	if v != nil {
-		return errDataDuplication
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("DuplicateCSRF"))
 	}
 	if key == "" || val == nil {
 		return nil
@@ -68,7 +65,7 @@ func (obj *csrfService) Set(key string, val []byte, ttl time.Duration) error {
 	}
 	_, err := g.DB.Insert(models.CSRFName).Rows(csrfs).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, err.Error())
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("CreationCSRFFailed"))
 	}
 
 	return nil
@@ -81,7 +78,7 @@ func (obj *csrfService) Delete(key string) error {
 		"key": key,
 	}).Executor().Exec()
 	if err != nil {
-		return err
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("DeletionCSRFFailed"))
 	}
 
 	return nil
@@ -91,7 +88,7 @@ func (obj *csrfService) Delete(key string) error {
 func (obj *csrfService) Reset() error {
 	_, err := g.DB.Delete(models.CSRFName).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, err.Error())
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("ResetCSRFFailed"))
 	}
 
 	return nil

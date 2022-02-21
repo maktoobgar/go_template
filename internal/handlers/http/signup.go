@@ -18,7 +18,7 @@ func SignUp(c *fiber.Ctx) error {
 	uService := user_service.New()
 	req := &signUpRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, "not all required fields provided")
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
 	}
 
 	user, err := uService.CreateUser(req.Username, req.Password, req.DisplayName)

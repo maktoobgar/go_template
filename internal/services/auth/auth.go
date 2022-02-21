@@ -1,17 +1,13 @@
 package auth_service
 
 import (
+	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
 	"github.com/maktoobgar/go_template/pkg/errors"
-	"github.com/maktoobgar/go_template/pkg/errors/messages"
 )
 
 type authService struct{}
-
-var errDataNotFound = errors.New(errors.NotFoundStatus, messages.ErrDataNotFound)
-var errWrongData = errors.New(errors.InvalidStatus, messages.ErrWrongData)
-var errUnexpected = errors.New(errors.UnexpectedStatus, messages.ErrUnexpected)
 
 var instance = &authService{}
 
@@ -23,7 +19,7 @@ func (obj *authService) authenticate(username string, password string) (*models.
 	}
 
 	if !uService.CheckPasswordHash(password, user.Password) {
-		return nil, errWrongData
+		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Translator.TranslateEN("UnMatchPassword"))
 	}
 
 	return user, nil
@@ -42,7 +38,7 @@ func (obj *authService) SignUp(username string, password string, display_name st
 	uService := user_service.New()
 	_, err := uService.GetUser(username)
 	if err == nil {
-		return nil, errDataNotFound
+		return nil, errors.New(errors.InvalidStatus, errors.ReSingIn, g.Translator.TranslateEN("DuplicateUser"))
 	}
 
 	user, err := uService.CreateUser(username, password, display_name)

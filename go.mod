@@ -7,7 +7,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137
 	github.com/gofiber/fiber/v2 v2.27.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
-	github.com/nicksnyder/go-i18n/v2 v2.1.2
+	github.com/nicksnyder/go-i18n/v2 v2.2.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/xhit/go-str2duration/v2 v2.0.0
 	golang.org/x/text v0.3.7

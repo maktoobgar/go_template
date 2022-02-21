@@ -23,4 +23,5 @@ func SetDefaultSettings(app *fiber.App) {
 			ContextKey:   "csrf",
 		}),
 	)
+
 }

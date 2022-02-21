@@ -7,15 +7,10 @@ import (
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	"github.com/maktoobgar/go_template/pkg/errors"
-	"github.com/maktoobgar/go_template/pkg/errors/messages"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type userService struct{}
-
-var errDataNotFound = errors.New(errors.NotFoundStatus, messages.ErrDataNotFound)
-var errWrongData = errors.New(errors.InvalidStatus, messages.ErrWrongData)
-var errUnexpected = errors.New(errors.UnexpectedStatus, messages.ErrUnexpected)
 
 var instance = &userService{}
 
@@ -36,14 +31,9 @@ func (obj *userService) CreateUser(username string, password string, display_nam
 		JoinedDate:  time.Now(),
 	}
 
-	_, err := g.DB.Insert(models.UserName).Rows([]*models.User{user}).Executor().Exec()
+	_, err := g.DB.Insert(models.UserName).Rows([]*models.User{user}).Executor().ScanStruct(user)
 	if err != nil {
-		return nil, errUnexpected
-	}
-
-	user, err = obj.GetUser(username)
-	if err != nil {
-		return nil, errUnexpected
+		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
 	}
 
 	return user, nil
@@ -55,8 +45,8 @@ func (obj *userService) GetUser(username string) (*models.User, error) {
 		"username": username,
 	}).Executor().ScanStruct(user)
 
-	if !ok || err != nil || user == nil {
-		return nil, errDataNotFound
+	if !ok || err != nil {
+		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Translator.TranslateEN("UserNotFound"))
 	}
 
 	return user, nil
@@ -69,7 +59,7 @@ func (obj *userService) GetUserByID(id string) (*models.User, error) {
 	}).Executor().ScanStruct(user)
 
 	if !ok || err != nil || user == nil {
-		return nil, errDataNotFound
+		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Translator.TranslateEN("UserNotFound"))
 	}
 
 	return user, nil

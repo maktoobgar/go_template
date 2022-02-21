@@ -16,7 +16,7 @@ type signInRequest struct {
 func SignIn(c *fiber.Ctx) error {
 	req := &signInRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, "not all required fields provided")
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
 	}
 
 	auth := auth_service.New()

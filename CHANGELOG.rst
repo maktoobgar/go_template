@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: fiber's ErrorHandler customized
 * 🎉 feat: signup handler and sessionAuth middleware bug fixed
 * 🎉 feat: signup and sessionAuth middleware bug fixed
 * 🎉 feat: sessionAuth added to authenticate user in middleware level by session_id
