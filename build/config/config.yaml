@@ -34,3 +34,5 @@ grpc:
 
 debug: true
 domain: ""
+# allow_origins: "example.com,example.org"
+allow_origins: "*"

@@ -11,7 +11,7 @@ import (
 func SetDefaultSettings(app *fiber.App) {
 	app.Use(
 		cors.New(cors.Config{
-			AllowOrigins: "*",
+			AllowOrigins: g.CFG.AllowOrigins,
 		}),
 		csrf.New(csrf.Config{
 			Next:         csrf_service.Next,
