@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: jwt token authentication service added
 * 🎉 feat: fiber's ErrorHandler customized
 * 🎉 feat: signup handler and sessionAuth middleware bug fixed
 * 🎉 feat: signup and sessionAuth middleware bug fixed

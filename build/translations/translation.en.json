@@ -17,5 +17,13 @@
     "DeletionSessionFailed": "session deletion failed",
     "ResetSessionFailed": "session reset failed",
     "SignUpFailure": "sign up was not successful",
-    "UserNotFound": "requested user not found"
+    "UserNotFound": "requested user not found",
+    "GenerationTokenFailed": "token generation failed",
+    "NotIncludedToken": "token not included in header or cookies",
+    "InvalidToken": "received token is invalid",
+    "NotRefreshToken": "received token is not a refresh token",
+    "NotAccessToken": "received token is not an access token",
+    "UsedRefreshToken": "received refresh token is used",
+    "CreationRefreshTokenFailed": "refresh token creation failed",
+    "DeletionRefreshTokenFailed": "refresh token deletion failed"
 }

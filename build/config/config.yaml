@@ -36,3 +36,4 @@ debug: true
 domain: ""
 # allow_origins: "example.com,example.org"
 allow_origins: "*"
+secret_key: "update_me_please"

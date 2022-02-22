@@ -12,6 +12,7 @@ type (
 		Domain       string     `yaml:"domain"`
 		PWD          string     `yaml:"pwd"`
 		AllowOrigins string     `yaml:"allow_origins"`
+		SecretKey    string     `yaml:"secret_key"`
 	}
 
 	Database struct {

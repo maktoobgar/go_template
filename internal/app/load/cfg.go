@@ -50,6 +50,7 @@ func initializeConfigs() {
 
 	config.SetConfig(cfg)
 	g.CFG = cfg
+	g.SecretKey = []byte(cfg.SecretKey)
 }
 
 // Initialization for session_service

@@ -22,6 +22,9 @@ var Session *session.Store = nil
 // App
 var App *fiber.App = nil
 
+// AppSecret
+var SecretKey []byte = nil
+
 // DBs
 var Postgres = map[string]*goqu.Database{}
 var Sqlite = map[string]*goqu.Database{}
