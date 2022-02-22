@@ -22,6 +22,7 @@ require (
 	github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/denisenkom/go-mssqldb v0.12.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/doug-martin/goqu/v9 v9.18.0 // indirect
 	github.com/fasthttp/websocket v1.4.6 // indirect
 	github.com/fatih/color v1.7.0 // indirect

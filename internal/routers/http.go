@@ -11,7 +11,7 @@ func Http(app *fiber.App) {
 	apiGroup := app.Group("/api", middleware.Useless)
 
 	// /api/me
-	meGroup := apiGroup.Group("/me", middleware.SessionAuth)
+	meGroup := apiGroup.Group("/me", middleware.Auth)
 	meGroup.Get("/", httpHandler.Me).Name("Me")
 
 	// /api/:name?
@@ -21,4 +21,10 @@ func Http(app *fiber.App) {
 	authGroup := apiGroup.Group("/auth")
 	authGroup.Post("/signIn", httpHandler.SignIn).Name("SignIn")
 	authGroup.Post("/signUp", httpHandler.SignUp).Name("SignUp")
+
+	// /api/auth/token
+	tokenGroup := authGroup.Group("/token")
+	tokenGroup.Post("/signin", httpHandler.SignInToken).Name("SignInToken")
+	tokenGroup.Post("/signup", httpHandler.SignUpToken).Name("SignUpToken")
+	tokenGroup.Post("/refresh", httpHandler.Refresh).Name("Refresh")
 }
