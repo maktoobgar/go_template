@@ -4,34 +4,20 @@ CHANGELOG
 UNRELEASED
 ----------
 
-* 🎉 feat: signin signup and refresh jwt token urls added
-* 🎉 feat: jwt token authentication service added
-* 🎉 feat: fiber's ErrorHandler customized
-* 🎉 feat: signup handler and sessionAuth middleware bug fixed
-* 🎉 feat: signup and sessionAuth middleware bug fixed
-* 🎉 feat: sessionAuth added to authenticate user in middleware level by session_id
-* 🎉 feat: signin and me addresses added
-* 🎉 feat: authentication system added
-* 🎉 feat(users-service): users service added
-* ✅ test: all test cases for services now are in `test` folder
-* 🐛 fix: sessions now work fine
-* 🐛 fix: autoincrement for users table fixed
-* 🐛 fix: circular import fixed
-* 🐛 fix: some debugs happened
-* 🎉 feat(services): services and csrf added
-* 🎉 feat(session): session feature added
-* 🎉 feat(migration): added support for different databases for migration
-* 🎉 feat(migration): sql-migrate commandline migration handler added
-* 🎉 feat(querybuilder): query builder feature added
-* 🎉 feat(feat): grpc support added
-* 🎉 feat(middlewares-services): middlewares and services added
-* 🎉 feat(global): global package added
-* 🎉 feat(fiber): fiber added as http and socket response
-* 🎉 feat(translator): translator package added
-* 🎉 feat(errors): errors package added
-* 🎉 feat(logging): logging package added
-* 🎉 feat(config): config package added
 
+1.0.0 (2022-02-23)
+------------------
 
-.. 6.0.0 (2021-10-20)
-.. ------------------
+* feat: config package added
+* feat: logging package added
+* feat: errors package added
+* feat: translator package added
+* feat: database package added
+* feat: grpc package added
+* feat: fiber framework added as an http, socket and middleware functionality provider
+* feat: sign in and sign up feature with jwt and sessions added
+* feat: grpc support added
+* feat: goqu query builder added
+* feat: multi database feature added
+* feat: sql-migrate command line for migration automation added
+* feat: csrf service for preventing csrf attacks added
