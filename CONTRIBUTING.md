@@ -1,8 +1,8 @@
 # Welcome to go_template contributing guide
 
-Thank you for investing your time in contributing to our project! ✨
+Thank you for investing your time in contributing to this project! ✨
 
-Read our [Code of Conduct](/CODE_OF_CONDUCT.md) to keep our community approachable and respectable.
+Read the [Code of Conduct](/CODE_OF_CONDUCT.md) to keep the community approachable and respectable.
 
 In this guide you will get an overview of the contribution workflow from opening an issue, creating a PR, reviewing, and merging the PR.
 
@@ -56,9 +56,9 @@ After a week if you didn't create a pull request, anyone else can pick it up and
 7.  If you are sure of your code, commit and push your changes (there are rules for commits in [Commit message guidelines](#commit-message-guidelines) section, have a look)
 8.  Create a pull request and **mention** your issue number inside the pull request.
 9.  Wait for the review:
-   1.  We may ask you in review to add or change your code for a reason or mention you forgot to do something, If you provide the changes we asked, comeback and inform us about the changes and thanks for your contribution, we appreciate it. ✨
-   2.  If the review passed and pull request happened, thank you. we are happy to have you and between us. ✨
-   3.  If the review rejected, we will inform you about the reason for sure.
+   1.  You may be asked in review to add or change your code for a reason or mention you forgot to do something, If you provide the asked changes, comeback and inform us about the changes and thanks for your contribution, I appreciate it. ✨
+   2.  If the review passed and pull request happened, thank you. I am happy to have you. ✨
+   3.  If the review rejected, I will inform you about the reason for sure.
 
 So in summary:
 1. Pick or create a feature or bug issue.
@@ -76,7 +76,7 @@ Mostly don't change the file and let the script handle it.
 
 ### Commit message guidelines
 
-There is a template for how to commit:
+There is a template for how to commit ([conventional commit](https://www.conventionalcommits.org/en/v1.0.0/)):
 
 - **\<type>(\<scope>): \<subject>**
 
@@ -110,7 +110,7 @@ A brief description about what just happened.
 
 ## Versioning (Extra Section)
 
-This is just a reminder for us to know what versioning system we are using.
+This is just a reminder for everyone and me to know what versioning system I am using.
 
 Versioning in this project is based on semantic versioning:
 
