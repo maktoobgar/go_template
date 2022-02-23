@@ -85,7 +85,7 @@ func initialLogger() {
 }
 
 // Run dbs
-func intialDBs() {
+func initialDBs() {
 	err := databases.Setup(cfg)
 	if err != nil {
 		log.Fatalln(err)
@@ -98,5 +98,5 @@ func init() {
 	initializeSession()
 	initialTranslator()
 	initialLogger()
-	intialDBs()
+	initialDBs()
 }
