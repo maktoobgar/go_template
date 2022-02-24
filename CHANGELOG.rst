@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* ✅ test: test cases added for token and user service
 
 1.0.1 (2022-02-24)
 ------------------
