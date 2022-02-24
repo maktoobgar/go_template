@@ -8,7 +8,7 @@ import (
 
 func Http(app *fiber.App) {
 	// /api
-	apiGroup := app.Group("/api", middleware.Useless)
+	apiGroup := app.Group("/api")
 
 	// /api/me
 	meGroup := apiGroup.Group("/me", middleware.Auth)
