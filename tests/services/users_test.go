@@ -14,14 +14,14 @@ func TestUser(t *testing.T) {
 	uService := user_service.New()
 
 	// user should create
-	user, err := uService.CreateUser(db, "maktoobgar", "123456789", "maktoobgar")
+	user, err := uService.CreateUser(db, "maktoobgar3", "123456789", "maktoobgar")
 	if err != nil {
 		t.Errorf("error on creating a user, err: %s", err.Error())
 		return
 	}
 
 	// user should not create
-	_, err = uService.CreateUser(db, "maktoobgar", "123456789", "maktoobgar")
+	_, err = uService.CreateUser(db, "maktoobgar3", "123456789", "maktoobgar")
 	if err == nil {
 		t.Errorf("no error received on creating a duplicate user")
 		return

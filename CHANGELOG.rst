@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: bug fixed on test cases not getting succeed when running at the same time
 * 🐛 fix: CreateUser bug fixed on returning a user object without their id
 * ✅ test: test cases added for token and user service
 

@@ -15,7 +15,7 @@ func TestToken(t *testing.T) {
 	uService := user_service.New()
 
 	// user should create
-	user, err := uService.CreateUser(db, "maktoobgar", "123456789", "maktoobgar")
+	user, err := uService.CreateUser(db, "maktoobgar2", "123456789", "maktoobgar")
 	if err != nil {
 		t.Errorf("error on creating a user for testing tokens, err:\n%s", err.Error())
 		return

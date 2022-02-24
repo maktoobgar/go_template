@@ -12,7 +12,7 @@ func TestAuth(t *testing.T) {
 	db := tests.New()
 	auth := service_auth.New()
 
-	username, password := "maktoobgar", "123456789"
+	username, password := "maktoobgar1", "123456789"
 
 	// this should pass
 	_, err := auth.SignUp(db, username, password, username)
