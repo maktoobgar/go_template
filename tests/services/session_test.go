@@ -10,9 +10,9 @@ import (
 )
 
 func TestSession(t *testing.T) {
+	session := session_service.New()
 	session_service.SetDB(tests.New())
 
-	session := session_service.New()
 	value := []byte("asdawewrtergfgdmgkdrg4r5")
 	key := "m"
 
