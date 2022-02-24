@@ -1,7 +1,6 @@
 package user_service
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -33,9 +32,13 @@ func (obj *userService) CreateUser(db *goqu.Database, username string, password 
 		JoinedDate:  time.Now(),
 	}
 
-	_, err := db.Insert(models.UserName).Rows([]*models.User{user}).Executor().ScanStruct(user)
+	_, err := db.Insert(models.UserName).Rows([]*models.User{user}).Executor().Exec()
 	if err != nil {
-		fmt.Println(err)
+		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
+	}
+
+	user, err = obj.GetUser(db, username)
+	if err != nil {
 		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
 	}
 

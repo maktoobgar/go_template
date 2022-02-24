@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: CreateUser bug fixed on returning a user object without their id
 * ✅ test: test cases added for token and user service
 
 1.0.1 (2022-02-24)
