@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: test files address in pre-push script fixed
 * 🐛 fix: all contract files are in internal/contract as they should be
 
 1.0.0 (2022-02-23)
