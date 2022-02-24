@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
+	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	"github.com/maktoobgar/go_template/pkg/errors"
@@ -65,6 +66,6 @@ func (obj *userService) GetUserByID(id string) (*models.User, error) {
 	return user, nil
 }
 
-func New() UserService {
+func New() contract.UserService {
 	return instance
 }

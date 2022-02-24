@@ -1,4 +1,4 @@
-package token_service
+package contract
 
 import (
 	"time"

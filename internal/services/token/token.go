@@ -95,6 +95,6 @@ func (obj *tokenService) DeleteRefreshToken(token string) error {
 	return nil
 }
 
-func New() TokenService {
+func New() contract.TokenService {
 	return instance
 }

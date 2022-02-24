@@ -1,6 +1,7 @@
 package auth_service
 
 import (
+	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
@@ -49,6 +50,6 @@ func (obj *authService) SignUp(username string, password string, display_name st
 	return user, nil
 }
 
-func New() AuthService {
+func New() contract.AuthService {
 	return instance
 }
