@@ -38,29 +38,39 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
 - [X] Add **Session Authentication System** Support To Project
 - [X] Add **JWT Authentication System** Support To Project
 
-## How To Run
+## Quick Start
 
-If you want to run **socket** and **api**, just run `cmd/main/main.go` file like:
-```bash
-go run ./cmd/main/main.go -app=0
-# or
-go run ./cmd/main/main.go -app=f
-# or
-go run ./cmd/main/main.go -app=fiber
-```
+1. Copy and paste these lines in your terminal when you're inside project root directory:
+    * ```bash
+        cp dbconfig_example.yml dbconfig.yml
+        cp env_example.yml env.yml
+      ```
+    * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
 
-If you want to run **grpc** server, run `cmd/main/main.go` file like:
-```bash
-go run ./cmd/main/main.go -app=1
-# or
-go run ./cmd/main/main.go -app=g
-# or
-go run ./cmd/main/main.go -app=grpc
-```
+2. How to run:
+   1. If you want to run **socket** and **api**, just run `cmd/main/main.go` file like:
+        *  ```bash
+            go run ./cmd/main/main.go
+            # or  
+            go run ./cmd/main/main.go -app=0
+            # or
+            go run ./cmd/main/main.go -app=f
+            # or
+            go run ./cmd/main/main.go -app=fiber
+           ```
+
+   2. If you want to run **grpc** server, run `cmd/main/main.go` file like:
+         * ```bash
+           go run ./cmd/main/main.go -app=1
+           # or
+           go run ./cmd/main/main.go -app=g
+           # or
+           go run ./cmd/main/main.go -app=grpc
+           ```
 
 ## Clean Structure
 
-If you don't have any idea about **clean** structure, please just take a moment and just have a look about it first and after understanding the structure, come back here and continue.\
+If you don't have any idea about **clean** structure, please just take a moment and just have a look about it first and after understanding the structure, come back here and continue.
 
 **Note**: If you know about clean structure, understanding folders usages will make more sense.
 

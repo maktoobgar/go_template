@@ -4,8 +4,16 @@ CHANGELOG
 UNRELEASED
 ----------
 
-* 🐛 fix: test files address in pre-push script fixed
-* 🐛 fix: all contract files are in internal/contract as they should be
+
+1.0.1 (2022-02-24)
+------------------
+
+* fix: test files address in pre-push script fixed
+* fix: all contract files are in internal/contract as they should be
+* docs: documentation on how to setup updated
+* refactor: some config example files added to root directory
+* refactor: test cases have a separate folder in root directory
+* docs: documentation updated on how to run Quick Start section
 
 1.0.0 (2022-02-23)
 ------------------
