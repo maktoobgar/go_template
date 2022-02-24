@@ -22,7 +22,7 @@ func SignUp(c *fiber.Ctx) error {
 		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
 	}
 
-	user, err := uService.CreateUser(req.Username, req.Password, req.DisplayName)
+	user, err := uService.CreateUser(g.DB, req.Username, req.Password, req.DisplayName)
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func SignUpToken(c *fiber.Ctx) error {
 		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
 	}
 
-	user, err := uService.CreateUser(req.Username, req.Password, req.DisplayName)
+	user, err := uService.CreateUser(g.DB, req.Username, req.Password, req.DisplayName)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func SignUpToken(c *fiber.Ctx) error {
 		return err
 	}
 
-	refreshTokenString, _, err := tService.CreateRefreshToken(user)
+	refreshTokenString, _, err := tService.CreateRefreshToken(g.DB, user)
 	if err != nil {
 		return err
 	}

@@ -13,11 +13,14 @@ import (
 
 type csrfService struct{}
 
-var instance *csrfService = &csrfService{}
+var (
+	instance *csrfService   = &csrfService{}
+	db       *goqu.Database = nil
+)
 
 func (obj *csrfService) get_value(key string) (*models.CSRF, error) {
 	csrfObj := &models.CSRF{}
-	ok, _ := g.DB.From(models.CSRFName).Limit(1).Where(
+	ok, _ := db.From(models.CSRFName).Limit(1).Where(
 		goqu.Ex{"key": key},
 	).Executor().ScanStruct(csrfObj)
 	if !ok {
@@ -63,7 +66,7 @@ func (obj *csrfService) Set(key string, val []byte, ttl time.Duration) error {
 			ExpireDate: t,
 		},
 	}
-	_, err := g.DB.Insert(models.CSRFName).Rows(csrfs).Executor().Exec()
+	_, err := db.Insert(models.CSRFName).Rows(csrfs).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("CreationCSRFFailed"))
 	}
@@ -74,7 +77,7 @@ func (obj *csrfService) Set(key string, val []byte, ttl time.Duration) error {
 // Delete deletes the value for the given key.
 // It returns no error if the storage does not contain the key,
 func (obj *csrfService) Delete(key string) error {
-	_, err := g.DB.Delete(models.CSRFName).Where(goqu.Ex{
+	_, err := db.Delete(models.CSRFName).Where(goqu.Ex{
 		"key": key,
 	}).Executor().Exec()
 	if err != nil {
@@ -86,7 +89,7 @@ func (obj *csrfService) Delete(key string) error {
 
 // Reset resets the storage and delete all keys.
 func (obj *csrfService) Reset() error {
-	_, err := g.DB.Delete(models.CSRFName).Executor().Exec()
+	_, err := db.Delete(models.CSRFName).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("ResetCSRFFailed"))
 	}
@@ -100,6 +103,15 @@ func (obj *csrfService) Close() error {
 	return nil
 }
 
+func SetDB(entryDB ...*goqu.Database) {
+	if entryDB != nil {
+		db = entryDB[0]
+	} else {
+		db = g.DB
+	}
+}
+
+// Checks if the url is an api call or not
 func Next(c *fiber.Ctx) bool {
 	return strings.Contains(c.Path(), "/api/")
 }

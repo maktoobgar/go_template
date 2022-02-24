@@ -43,13 +43,13 @@ func Refresh(c *fiber.Ctx) error {
 	}
 
 	// Check if refresh token is not used before
-	_, err = tService.GetRefreshToken(token)
+	_, err = tService.GetRefreshToken(g.DB, token)
 	if err != nil {
 		return err
 	}
 
 	// Get user object
-	user, err := uService.GetUser(claims.Username)
+	user, err := uService.GetUser(g.DB, claims.Username)
 	if err != nil {
 		return err
 	}
@@ -59,12 +59,12 @@ func Refresh(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	refreshTokenString, _, err := tService.CreateRefreshToken(user)
+	refreshTokenString, _, err := tService.CreateRefreshToken(g.DB, user)
 	if err != nil {
 		return err
 	}
 
-	err = tService.DeleteRefreshToken(token)
+	err = tService.DeleteRefreshToken(g.DB, token)
 	if err != nil {
 		return err
 	}

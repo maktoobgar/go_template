@@ -45,6 +45,9 @@ func ReadLocalConfigs(pwd string, cfg interface{}) error {
 	if err := Parse(filepath.Join(pwd, "env.yaml"), cfg, false); err != nil {
 		return err
 	}
+	if err := Parse(filepath.Join(pwd, "env.yml"), cfg, false); err != nil {
+		return err
+	}
 	return nil
 }
 

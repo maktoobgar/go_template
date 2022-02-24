@@ -13,11 +13,14 @@ import (
 
 type sessionService struct{}
 
-var instance = &sessionService{}
+var (
+	instance                = &sessionService{}
+	db       *goqu.Database = nil
+)
 
 func (obj *sessionService) get_value(key string) (*models.Session, error) {
 	sessionObj := &models.Session{}
-	ok, _ := g.DB.From(models.SessionName).Limit(1).Where(
+	ok, _ := db.From(models.SessionName).Limit(1).Where(
 		goqu.Ex{"key": key},
 	).Executor().ScanStruct(sessionObj)
 	if !ok {
@@ -68,7 +71,7 @@ func (obj *sessionService) Set(key string, val []byte, ttl time.Duration) error 
 		},
 	}
 
-	_, err := g.DB.Insert(models.SessionName).Rows(sessions).Executor().Exec()
+	_, err := db.Insert(models.SessionName).Rows(sessions).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("CreationSessionFailed"))
 	}
@@ -79,7 +82,7 @@ func (obj *sessionService) Set(key string, val []byte, ttl time.Duration) error 
 // Delete deletes the value for the given key.
 // It returns no error if the storage does not contain the key,
 func (obj *sessionService) Delete(key string) error {
-	_, err := g.DB.Delete(models.SessionName).Where(goqu.Ex{
+	_, err := db.Delete(models.SessionName).Where(goqu.Ex{
 		"key": key,
 	}).Executor().Exec()
 	if err != nil {
@@ -91,7 +94,7 @@ func (obj *sessionService) Delete(key string) error {
 
 // Reset resets the storage and delete all keys.
 func (obj *sessionService) Reset() error {
-	_, err := g.DB.Delete(models.SessionName).Executor().Exec()
+	_, err := db.Delete(models.SessionName).Executor().Exec()
 	if err != nil {
 		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("ResetSessionFailed"))
 	}
@@ -103,6 +106,14 @@ func (obj *sessionService) Reset() error {
 // collectors and open connections.
 func (obj *sessionService) Close() error {
 	return nil
+}
+
+func SetDB(entryDB ...*goqu.Database) {
+	if entryDB != nil {
+		db = entryDB[0]
+	} else {
+		db = g.DB
+	}
 }
 
 func New() fiber.Storage {

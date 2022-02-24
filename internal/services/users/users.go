@@ -1,6 +1,7 @@
 package user_service
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -24,7 +25,7 @@ func (obj *userService) CheckPasswordHash(password, hash string) bool {
 	return nil == bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
 
-func (obj *userService) CreateUser(username string, password string, display_name string) (*models.User, error) {
+func (obj *userService) CreateUser(db *goqu.Database, username string, password string, display_name string) (*models.User, error) {
 	user := &models.User{
 		Username:    username,
 		Password:    obj.HashPassword(password),
@@ -32,17 +33,18 @@ func (obj *userService) CreateUser(username string, password string, display_nam
 		JoinedDate:  time.Now(),
 	}
 
-	_, err := g.DB.Insert(models.UserName).Rows([]*models.User{user}).Executor().ScanStruct(user)
+	_, err := db.Insert(models.UserName).Rows([]*models.User{user}).Executor().ScanStruct(user)
 	if err != nil {
+		fmt.Println(err)
 		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
 	}
 
 	return user, nil
 }
 
-func (obj *userService) GetUser(username string) (*models.User, error) {
+func (obj *userService) GetUser(db *goqu.Database, username string) (*models.User, error) {
 	user := &models.User{}
-	ok, err := g.DB.From(models.UserName).Limit(1).Where(goqu.Ex{
+	ok, err := db.From(models.UserName).Limit(1).Where(goqu.Ex{
 		"username": username,
 	}).Executor().ScanStruct(user)
 
@@ -53,9 +55,9 @@ func (obj *userService) GetUser(username string) (*models.User, error) {
 	return user, nil
 }
 
-func (obj *userService) GetUserByID(id string) (*models.User, error) {
+func (obj *userService) GetUserByID(db *goqu.Database, id string) (*models.User, error) {
 	user := &models.User{}
-	ok, err := g.DB.From(models.UserName).Limit(1).Where(goqu.Ex{
+	ok, err := db.From(models.UserName).Limit(1).Where(goqu.Ex{
 		"id": id,
 	}).Executor().ScanStruct(user)
 

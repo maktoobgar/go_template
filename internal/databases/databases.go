@@ -60,6 +60,7 @@ func SetDBs(dbs map[string]*goqu.Database) error {
 		default:
 			return fmt.Errorf("%s database not supported", strings.Split(k, ",")[1])
 		}
+		g.AllDBs[dbName] = v
 	}
 
 	return nil
@@ -67,18 +68,21 @@ func SetDBs(dbs map[string]*goqu.Database) error {
 
 func SetConnections(cons map[string]*sql.DB) error {
 	for k, v := range cons {
-		switch strings.Split(k, ",")[1] {
+		dbName := strings.Split(k, ",")[0]
+		dbType := strings.Split(k, ",")[1]
+		switch dbType {
 		case "postgres":
-			g.PostgresCons[strings.Split(k, ",")[0]] = v
+			g.PostgresCons[dbName] = v
 		case "sqlite3":
-			g.SqliteCons[strings.Split(k, ",")[0]] = v
+			g.SqliteCons[dbName] = v
 		case "mysql":
-			g.MySQLCons[strings.Split(k, ",")[0]] = v
+			g.MySQLCons[dbName] = v
 		case "mssql":
-			g.SqlServerCons[strings.Split(k, ",")[0]] = v
+			g.SqlServerCons[dbName] = v
 		default:
 			return fmt.Errorf("%s database not supported", strings.Split(k, ",")[1])
 		}
+		g.AllCons[dbName] = v
 	}
 
 	return nil

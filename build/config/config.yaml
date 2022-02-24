@@ -1,7 +1,7 @@
 databases:
   - type: "sqlite3"
     name: "main"
-    db_name: "test.db"
+    db_name: "project.db"
 
   # - name: "main"
   #   type: "postgres"

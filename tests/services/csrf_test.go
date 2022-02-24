@@ -1,42 +1,37 @@
 package tests
 
 import (
-	"os/exec"
 	"testing"
 	"time"
 
 	_ "github.com/maktoobgar/go_template/internal/app/load"
-	session_service "github.com/maktoobgar/go_template/internal/services/session"
+	csrf_service "github.com/maktoobgar/go_template/internal/services/csrf"
+	"github.com/maktoobgar/go_template/tests"
 )
 
-func TestSession(t *testing.T) {
-	e1 := exec.Command("sql-migrate", "down", "-limit=0").Run()
-	e2 := exec.Command("sql-migrate", "up").Run()
-	if e1 != nil || e2 != nil {
-		t.Error(e1, e2)
-		return
-	}
+func TestCSRF(t *testing.T) {
+	csrf := csrf_service.New()
+	csrf_service.SetDB(tests.New())
 
-	session := session_service.New()
 	value := []byte("asdawewrtergfgdmgkdrg4r5")
 	key := "m"
 
 	// data should set
-	err := session.Set(key, value, time.Duration(time.Hour*24))
+	err := csrf.Set(key, value, time.Duration(time.Hour*24))
 	if err != nil {
 		t.Errorf(err.Error())
 		return
 	}
 
 	// we should have an duplication error
-	err = session.Set(key, value, time.Duration(time.Hour*24))
+	err = csrf.Set(key, value, time.Duration(time.Hour*24))
 	if err == nil {
 		t.Errorf("we should have an error here because of the same data setting data happened")
 		return
 	}
 
 	// we should get the data
-	res, err := session.Get(key)
+	res, err := csrf.Get(key)
 	if err != nil {
 		t.Errorf(err.Error())
 		return
@@ -49,14 +44,14 @@ func TestSession(t *testing.T) {
 	}
 
 	// data should remove safely
-	err = session.Delete(key)
+	err = csrf.Delete(key)
 	if err != nil {
 		t.Errorf(err.Error())
 		return
 	}
 
 	// we should get an error for requesting non existing data
-	res, err = session.Get(key)
+	res, err = csrf.Get(key)
 	if err == nil {
 		t.Errorf("error has to heppen here but it is nil, err: %v", err)
 		return
@@ -67,26 +62,26 @@ func TestSession(t *testing.T) {
 	}
 
 	// add an expired key
-	err = session.Set(key, value, time.Duration(-time.Hour*24))
+	err = csrf.Set(key, value, time.Duration(-time.Hour*24))
 	if err != nil {
 		t.Errorf(err.Error())
 		return
 	}
 
 	// we should get nothing here
-	res, err = session.Get(key)
+	res, err = csrf.Get(key)
 	if err == nil {
-		t.Errorf("expire date was deprecated but data still return, res: %v, err: %v", res, err)
+		t.Errorf("expire date was deprecated but data still returns, res: %v, err: %v", res, err)
 		return
 	}
 
 	// we should delete everything here safely
-	err = session.Reset()
+	err = csrf.Reset()
 	if err != nil {
 		t.Errorf(err.Error())
 		return
 	}
 
 	// just to say i tested everything
-	session.Close()
+	csrf.Close()
 }

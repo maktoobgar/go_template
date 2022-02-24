@@ -19,7 +19,7 @@ func sessionAuth(c *fiber.Ctx) error {
 	}
 
 	id := session.Get(session.ID()).(int)
-	user, err := uService.GetUserByID(fmt.Sprint(id))
+	user, err := uService.GetUserByID(g.DB, fmt.Sprint(id))
 	if err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func tokenAuth(c *fiber.Ctx, token string) error {
 		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("NotAccessToken"))
 	}
 
-	user, err := uService.GetUser(claims.Username)
+	user, err := uService.GetUser(g.DB, claims.Username)
 	if err != nil {
 		return err
 	}

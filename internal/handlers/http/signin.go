@@ -23,7 +23,7 @@ func SignIn(c *fiber.Ctx) error {
 	}
 
 	auth := auth_service.New()
-	user, err := auth.SignIn(req.Username, req.Password)
+	user, err := auth.SignIn(g.DB, req.Username, req.Password)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func SignInToken(c *fiber.Ctx) error {
 	}
 
 	auth := auth_service.New()
-	user, err := auth.SignIn(req.Username, req.Password)
+	user, err := auth.SignIn(g.DB, req.Username, req.Password)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func SignInToken(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	refreshTokenString, _, err := tService.CreateRefreshToken(user)
+	refreshTokenString, _, err := tService.CreateRefreshToken(g.DB, user)
 	if err != nil {
 		return err
 	}

@@ -30,6 +30,7 @@ var Postgres = map[string]*goqu.Database{}
 var Sqlite = map[string]*goqu.Database{}
 var MySQL = map[string]*goqu.Database{}
 var SqlServer = map[string]*goqu.Database{}
+var AllDBs = map[string]*goqu.Database{}
 
 // Default DB
 var DB *goqu.Database = nil
@@ -39,6 +40,7 @@ var PostgresCons = map[string]*sql.DB{}
 var SqliteCons = map[string]*sql.DB{}
 var MySQLCons = map[string]*sql.DB{}
 var SqlServerCons = map[string]*sql.DB{}
+var AllCons = map[string]*sql.DB{}
 
 func Log() logging.Logger {
 	return Logger

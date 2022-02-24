@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,6 +11,7 @@ import (
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
 	g "github.com/maktoobgar/go_template/internal/global"
+	csrf_service "github.com/maktoobgar/go_template/internal/services/csrf"
 	session_service "github.com/maktoobgar/go_template/internal/services/session"
 	"github.com/maktoobgar/go_template/pkg/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
@@ -90,6 +92,17 @@ func initialDBs() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	db, ok := g.AllDBs["auth"]
+	if !ok {
+		db, ok = g.AllDBs["main"]
+		if !ok {
+			log.Fatalln(errors.New("both 'main' and 'auth' dbs are not defined (at least one of them required)"))
+		}
+	}
+
+	csrf_service.SetDB(db)
+	session_service.SetDB(db)
 }
 
 // Server initialization

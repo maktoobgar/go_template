@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/doug-martin/goqu/v9/exp"
 	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
@@ -35,7 +36,7 @@ func (obj *tokenService) CreateAccessToken(user *models.User) (string, time.Time
 	return tokenString, expirationTime, nil
 }
 
-func (obj *tokenService) CreateRefreshToken(user *models.User) (string, time.Time, error) {
+func (obj *tokenService) CreateRefreshToken(db *goqu.Database, user *models.User) (string, time.Time, error) {
 	expirationTime := time.Now().Add((24 * time.Hour) * 7)
 
 	claims := &contract.Claims{
@@ -56,7 +57,7 @@ func (obj *tokenService) CreateRefreshToken(user *models.User) (string, time.Tim
 		{Token: tokenString},
 	}
 
-	_, err = g.DB.Insert(models.RefreshTokenName).Rows(rows).Executor().Exec()
+	_, err = db.Insert(models.RefreshTokenName).Rows(rows).Executor().Exec()
 	if err != nil {
 		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("CreationRefreshTokenFailed"))
 	}
@@ -64,9 +65,9 @@ func (obj *tokenService) CreateRefreshToken(user *models.User) (string, time.Tim
 	return tokenString, expirationTime, nil
 }
 
-func (obj *tokenService) GetRefreshToken(token string) (*models.RefreshToken, error) {
+func (obj *tokenService) GetRefreshToken(db *goqu.Database, token string) (*models.RefreshToken, error) {
 	refreshToken := &models.RefreshToken{}
-	ok, err := g.DB.From(models.RefreshTokenName).Limit(1).Where(exp.Ex{
+	ok, err := db.From(models.RefreshTokenName).Limit(1).Where(exp.Ex{
 		"token": token,
 	}).Executor().ScanStruct(refreshToken)
 	if !ok || err != nil {
@@ -76,17 +77,8 @@ func (obj *tokenService) GetRefreshToken(token string) (*models.RefreshToken, er
 	return refreshToken, nil
 }
 
-func (obj *tokenService) SignedString(token *jwt.Token) (string, error) {
-	key, err := token.SignedString(g.SecretKey)
-	if err != nil {
-		return "", errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("InvalidToken"))
-	}
-
-	return key, nil
-}
-
-func (obj *tokenService) DeleteRefreshToken(token string) error {
-	_, err := g.DB.Delete(models.RefreshTokenName).Where(exp.Ex{
+func (obj *tokenService) DeleteRefreshToken(db *goqu.Database, token string) error {
+	_, err := db.Delete(models.RefreshTokenName).Where(exp.Ex{
 		"token": token,
 	}).Executor().Exec()
 	if err != nil {
