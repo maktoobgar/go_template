@@ -4,13 +4,13 @@
 <img src="images/golang.png"></img>
 </p>
 
-At this project, I'm trying to create a fully extendable golang template webservice structure with **Clean** structure and come up with a reusable, nice and scalable template for any backend project and ofcourse reusable codes and completely separate packages. In this template project I try to imagine different scenarios and test everything for open source community and ofcourse for my future projects.
+At this project, I'm trying to create a fully extendable golang template webservice structure with **Clean** architecture and come up with a reusable, nice and scalable template for any backend project and ofcourse reusable codes and completely separate packages. In this template project I try to imagine different scenarios and test everything for open source community and ofcourse for my future projects.
 
 If you do love to contribute, please do, I appreciate it.
 
 And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know about how to contribute in this project.
 
-## Our Goals
+## Goals
 
 If you think something is missing in this list, create an issue and inform me about it.
 
@@ -40,14 +40,21 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
 
 ## Quick Start
 
-1. Copy and paste these lines in your terminal when you're inside project root directory:
+1. Install Dependencies:
+   * ```
+     go get -v github.com/rubenv/sql-migrate/...
+     go mod tidy
+     ```
+   * **Note**: For migrations you most likely need `sql-migrate`.
+
+2. Copy and paste these lines in your terminal when you're inside project root directory:
     * ```bash
         cp dbconfig_example.yml dbconfig.yml
         cp env_example.yml env.yml
       ```
     * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
 
-2. How to run:
+3. How to run:
    1. If you want to run **socket** and **api**, just run `cmd/main/main.go` file like:
         *  ```bash
             go run ./cmd/main/main.go
@@ -70,9 +77,9 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
 
 ## Clean Structure
 
-If you don't have any idea about **clean** structure, please just take a moment and just have a look about it first and after understanding the structure, come back here and continue.
+If you don't have any idea about **clean** architecture, please just take a moment and just have a look at it first and after understanding the structure, come back here and continue.
 
-**Note**: If you know about clean structure, understanding folders usages will make more sense.
+**Note**: If you know about clean architecture, understanding folders usages will make more sense.
 
 ## Config Loading
 
@@ -167,7 +174,7 @@ Just take a look at middleware examples inside `internal/middleware` folder and 
 
 Inside `internal/routers/http.go` file for http methods or `internal/routers/ws.go` file for socket methods, create a group of your url address and add your middleware inside it.
 
-[config.yaml]: /home/maktoobgar/Projects/go_template/build/config/config.yaml
+[config.yaml]: build/config/config.yaml
 [cfg.go]: internal/app/load/cfg.go
 [global.go]: internal/global/global.go
 [config.go]: internal/config/config.go
