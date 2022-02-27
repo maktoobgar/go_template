@@ -4,9 +4,13 @@ CHANGELOG
 UNRELEASED
 ----------
 
-* 🐛 fix: bug fixed on test cases not getting succeed when running at the same time
-* 🐛 fix: CreateUser bug fixed on returning a user object without their id
-* ✅ test: test cases added for token and user service
+
+1.0.2 (2022-02-25)
+------------------
+
+* fix: bug fixed on test cases not getting succeed when running at the same time
+* fix: CreateUser bug fixed on returning a user object without their id
+* test: test cases added for token and user service
 
 1.0.1 (2022-02-24)
 ------------------
