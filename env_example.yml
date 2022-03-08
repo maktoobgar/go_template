@@ -11,8 +11,12 @@ databases:
   #   time_zone: "Asia/Tehran"
   #   charset: "utf8mb4"
   - type: "sqlite3"
-    name: "main"
-    db_name: "project.db"
+    name: "test"
+    db_name: "test.db"
+
+# If you change debug to false, don't forget to 
+# add a database with it's name equal to "main"
+debug: true
 
 api:
   ip: 0.0.0.0

@@ -36,24 +36,28 @@ func SetDBs(dbs map[string]*goqu.Database) error {
 	for k, v := range dbs {
 		dbName := strings.Split(k, ",")[0]
 		dbType := strings.Split(k, ",")[1]
+		mainOrTest := "test"
+		if !g.CFG.Debug {
+			mainOrTest = "main"
+		}
 		switch dbType {
 		case "postgres":
-			if dbName == "main" && g.DB == nil {
+			if dbName == mainOrTest && g.DB == nil {
 				g.DB = v
 			}
 			g.Postgres[dbName] = v
 		case "sqlite3":
-			if dbName == "main" && g.DB == nil {
+			if dbName == mainOrTest && g.DB == nil {
 				g.DB = v
 			}
 			g.Sqlite[dbName] = v
 		case "mysql":
-			if dbName == "main" && g.DB == nil {
+			if dbName == mainOrTest && g.DB == nil {
 				g.DB = v
 			}
 			g.MySQL[dbName] = v
 		case "mssql":
-			if dbName == "main" && g.DB == nil {
+			if dbName == mainOrTest && g.DB == nil {
 				g.DB = v
 			}
 			g.SqlServer[dbName] = v

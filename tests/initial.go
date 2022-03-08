@@ -29,7 +29,7 @@ func init() {
 	}
 
 	// Up migrations
-	err = exec.Command("sql-migrate", "up", "-config=dbtest.yml").Run()
+	err = exec.Command("sql-migrate", "up").Run()
 	if err != nil {
 		log.Fatalln(err)
 	}

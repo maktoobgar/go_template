@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/doug-martin/goqu/v9"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
@@ -93,11 +94,20 @@ func initialDBs() {
 		log.Fatalln(err)
 	}
 
-	db, ok := g.AllDBs["auth"]
-	if !ok {
-		db, ok = g.AllDBs["main"]
+	var db *goqu.Database = nil
+	var ok bool = false
+	if !g.CFG.Debug {
+		db, ok = g.AllDBs["auth"]
 		if !ok {
-			log.Fatalln(errors.New("both 'main' and 'auth' dbs are not defined (at least one of them required)"))
+			db, ok = g.AllDBs["main"]
+			if !ok {
+				log.Fatalln(errors.New("both 'main' and 'auth' dbs are not defined (at least one of them required)"))
+			}
+		}
+	} else {
+		db, ok = g.AllDBs["test"]
+		if !ok {
+			log.Fatalln(errors.New("'test' db is not defined"))
 		}
 	}
 
