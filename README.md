@@ -4,55 +4,63 @@
 <img src="images/golang.png"></img>
 </p>
 
-At this project, I'm trying to create a fully extendable golang template webservice structure with **Clean** architecture and come up with a reusable, nice and scalable template for any backend project and ofcourse reusable codes and completely separate packages. In this template project I try to imagine different scenarios and test everything for open source community and ofcourse for my future projects.
+At this project, I created a fully extendable golang template webservice structure in **Clean** architecture and came up with a reusable, nice and scalable template for any backend project and ofcourse reusable codes and completely separate packages which helps programmers to just focus on implementing their own application. In this template project I tried to imagine different scenarios and test everything for open source community and ofcourse for my future projects.
 
 If you do love to contribute, please do, I appreciate it.
 
 And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know about how to contribute in this project.
 
-## Goals
+## Features
 
-If you think something is missing in this list, create an issue and inform me about it.
+1. [**pkg**](./pkg):
+   * [**config**](pkg/config): Inside this package, I implemented a functionality which reads files and fills up passed config structure instances. You can just use output of this package which is inside `g.CFG` structure.
+   * [**database**](pkg/database): Simply you just pass your data about your database connections to `New` function and it tries to create database connections and their query builders and return them all.
+   * [**errors**](pkg/errors/): If you need to return an error in any where in your `fiber` project (**socket** and **api**), use `New` function and give it an `status code`, an `action` and a `message` and return that error that function gives to you, this makes your error responses to users much more beautiful.
+     * Example: `errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("NotIncludedToken"))`
+     * errors.InvalidStatus means 400 bad request status code
+     * errors.ReSingIn means user has to signin again
+     * g.Trans().TranslateEN("NotIncludedToken") tries to translate "NotIncludedToken" and returns the translated value(if translation fails, no error returns and just "NotIncludedToken" returns)
+   * [**grpc**](pkg/grpc/): Just simplifies setup for running grpc server.
+   * [**logging**](pkg/logging/): Creates four folders inside `/var/log/project` (this address will be dynamic soon) like: `error`, `info`, `panic` and `warning` and if you use this logger, it will record those logs and put them inside their own folders in files.
+     * Example: `g.Log().Error(fmt.Sprintf("read: %s", err), FunctionWeAreIn, OptionalMap)`
+     * First argument is your error message
+     * Second argument, as it's name says `FunctionWeAreIn`, you just pass the function you got your error in them
+     * Third argument, is just a map that if you want to provide new information, you can provide your other data in them
+   * [**translator**](pkg/translator/): This is the package which reads translations inside your translation folder which by default your translation folder is defined in default config file(which is in `build/config/config.yaml`) inside `build/translations` and you can use this tool to translate.
+     * Example: `g.Trans().TranslateEN("RequiresNotProvided")`
+     * Example: `g.Trans().Translate(language.English.String(), "RequiresNotProvided")`
 
-Global Goals ([<ins>**pkg**</ins>](./pkg)):
-- [X] Add **GRPC** Package
-- [X] Add **Fiber** for http response Package
-- [x] Add **Translator** Package
-- [x] Add **Logger** Package
-- [x] Add **Errors** Package
-- [x] Add **Config** Package
-
-Project Goals ([<ins>**internal**</ins>](./internal)):
-- [X] Add **Global** To Project
-- [X] Add **Socket** To Project
-- [X] Add **Services** To Project
-- [X] Add **Session** Service To Project
-- [X] Add **Token** Service To Project
-- [X] Add **Handlers** To Project
-- [X] Add **Multi Database** To Project
-- [X] Add **Query Builder** To Project
-- [X] Add **Migration Handler** To Project
-- [X] Add **Middleware** Support To Project
-- [X] Add **Cors Policy** Support To Project
-- [X] Add **CSRF** Support To Project
-- [X] Add **Session Authentication System** Support To Project
-- [X] Add **JWT Authentication System** Support To Project
+2. [**internal**](./internal/):
+   * api
+   * socket
+   * grpc
+   * multi database support
+   * jwt authentication
+   * session authentication
+   * csrf
+   * users service(sign in, sign up and create users)
+   * flexible configuration files
+   * not being dependable on which database you use
+   * using sql-migrate tool for migrations
+   * using fiber as http response handler for api and socket connections
+   * running fiber (api, socket) and grpc with a single command
+     * **Note**: grpc and fiber can't run on the same port
 
 ## Quick Start
 
 1. Install Dependencies:
    * ```
-     go get -v github.com/rubenv/sql-migrate/...
-     go mod tidy
+     go mod download -x all
+     go get -v github.com/rubenv/sql-migrate/... && git restore go.mod
      ```
    * **Note**: For migrations you most likely need `sql-migrate`.
 
 2. Copy and paste these lines in your terminal when you're inside project root directory:
-    * ```bash
-        cp dbconfig_example.yml dbconfig.yml
-        cp env_example.yml env.yml
+   * ```bash
+      cp dbconfig_example.yml dbconfig.yml
+      cp env_example.yml env.yml
       ```
-    * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
+   * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
 
 3. How to run:
    1. If you want to run **socket**, **api** and **grpc** all in one action. run `cmd/main/main.go` file like:
@@ -83,11 +91,11 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
         go run ./cmd/main/main.go -app=grpc
         ```
 
-## Clean Structure
+## Clean Architecture
 
-If you don't have any idea about **clean** architecture, please just take a moment and just have a look at it first and after understanding the structure, come back here and continue.
+If you don't have any idea about **clean** architecture, please just take a moment and just have a look at it first and after understanding the architecture, come back here and continue.
 
-**Note**: If you know about clean architecture, understanding folders usages will make more sense.
+**Note**: If you first know about clean architecture, understanding folders usages will make more sense.
 
 ## Config Loading
 
