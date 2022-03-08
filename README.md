@@ -55,25 +55,33 @@ Project Goals ([<ins>**internal**</ins>](./internal)):
     * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
 
 3. How to run:
-   1. If you want to run **socket** and **api**, just run `cmd/main/main.go` file like:
-        *  ```bash
-            go run ./cmd/main/main.go
-            # or  
-            go run ./cmd/main/main.go -app=0
-            # or
-            go run ./cmd/main/main.go -app=f
-            # or
-            go run ./cmd/main/main.go -app=fiber
-           ```
+   1. If you want to run **socket**, **api** and **grpc** all in one action. run `cmd/main/main.go` file like:
+       * ```bash
+          go run ./cmd/main/main.go
+          # or
+          go run ./cmd/main/main.go -app=0
+          # or
+          go run ./cmd/main/main.go -app=b
+          # or
+          go run ./cmd/main/main.go -app=both
+          ```
+   2. If you want to run **socket** and **api**, run `cmd/main/main.go` file like:
+       * ```bash
+          go run ./cmd/main/main.go -app=1
+          # or
+          go run ./cmd/main/main.go -app=f
+          # or
+          go run ./cmd/main/main.go -app=fiber
+          ```
 
-   2. If you want to run **grpc** server, run `cmd/main/main.go` file like:
-         * ```bash
-           go run ./cmd/main/main.go -app=1
-           # or
-           go run ./cmd/main/main.go -app=g
-           # or
-           go run ./cmd/main/main.go -app=grpc
-           ```
+   3. If you want to run **grpc** server, run `cmd/main/main.go` file like:
+      * ```bash
+        go run ./cmd/main/main.go -app=2
+        # or
+        go run ./cmd/main/main.go -app=g
+        # or
+        go run ./cmd/main/main.go -app=grpc
+        ```
 
 ## Clean Structure
 
