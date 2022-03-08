@@ -13,7 +13,7 @@ func New() *grpc.Server {
 }
 
 func Run(s *grpc.Server, ip string, port string) {
-	fmt.Printf("gRPC is up and running on %s:%s\n\n", ip, port)
+	fmt.Printf("gRPC is up and running on %s:%s\n", ip, port)
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

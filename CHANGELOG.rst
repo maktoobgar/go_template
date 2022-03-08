@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: with no app option, grpc and fiber will run together
 * 🎉 feat: if debug is true, database with `test` name will place in g.DB and if false, database with `main` name will place in g.DB
 
 1.0.2 (2022-02-25)

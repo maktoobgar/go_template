@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	_ "github.com/maktoobgar/go_template/internal/app/load"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/routers"
 	"github.com/maktoobgar/go_template/pkg/errors"
@@ -14,7 +13,10 @@ import (
 var ()
 
 func Fiber() {
-	// Run App
+	// Print Info
+	info()
+
+	// Config Server
 	app := fiber.New(fiber.Config{
 		Prefork:      true,
 		ErrorHandler: errors.ErrorHandler,
@@ -24,6 +26,7 @@ func Fiber() {
 		AppName:      "Brand New App",
 	})
 
+	// Make App Global
 	g.App = app
 
 	// Router Settings
@@ -31,5 +34,6 @@ func Fiber() {
 	routers.Http(app)
 	routers.Ws(app)
 
+	// Run App
 	g.Log().Panic(app.Listen(fmt.Sprintf("%s:%s", g.CFG.Api.IP, g.CFG.Api.Port)).Error(), Fiber, nil)
 }
