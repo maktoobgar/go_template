@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: this simple script replaced husky
 * 🎉 feat: with no app option, grpc and fiber will run together
 * 🎉 feat: if debug is true, database with `test` name will place in g.DB and if false, database with `main` name will place in g.DB
 
