@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: g.Translator changed to g.Trans()
 
 1.1.0 (2022-03-08)
 ------------------

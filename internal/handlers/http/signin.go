@@ -19,7 +19,7 @@ type signInRequest struct {
 func SignIn(c *fiber.Ctx) error {
 	req := &signInRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
 	}
 
 	auth := auth_service.New()
@@ -57,7 +57,7 @@ func SignInToken(c *fiber.Ctx) error {
 	tService := token_service.New()
 	req := &signInRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
 	}
 
 	auth := auth_service.New()

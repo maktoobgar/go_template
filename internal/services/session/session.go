@@ -24,7 +24,7 @@ func (obj *sessionService) get_value(key string) (*models.Session, error) {
 		goqu.Ex{"key": key},
 	).Executor().ScanStruct(sessionObj)
 	if !ok {
-		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Translator.TranslateEN("InvalidSessionID"))
+		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Trans().TranslateEN("InvalidSessionID"))
 	}
 
 	return sessionObj, nil
@@ -40,12 +40,12 @@ func (obj *sessionService) Get(key string) ([]byte, error) {
 
 	if session.ExpireDate.Unix() < time.Now().Unix() {
 		obj.Delete(key)
-		return nil, errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("ExpiredSessionID"))
+		return nil, errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("ExpiredSessionID"))
 	}
 
 	res, err := hex.DecodeString(session.Value)
 	if err != nil {
-		return nil, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("DecodeFailure"))
+		return nil, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Trans().TranslateEN("DecodeFailure"))
 	}
 	return res, nil
 }
@@ -56,7 +56,7 @@ func (obj *sessionService) Get(key string) ([]byte, error) {
 func (obj *sessionService) Set(key string, val []byte, ttl time.Duration) error {
 	v, _ := obj.Get(key)
 	if v != nil {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("DuplicateSession"))
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("DuplicateSession"))
 	}
 	if key == "" || val == nil {
 		return nil
@@ -73,7 +73,7 @@ func (obj *sessionService) Set(key string, val []byte, ttl time.Duration) error 
 
 	_, err := db.Insert(models.SessionName).Rows(sessions).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("CreationSessionFailed"))
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Trans().TranslateEN("CreationSessionFailed"))
 	}
 
 	return nil
@@ -86,7 +86,7 @@ func (obj *sessionService) Delete(key string) error {
 		"key": key,
 	}).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("DeletionSessionFailed"))
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Trans().TranslateEN("DeletionSessionFailed"))
 	}
 
 	return nil
@@ -96,7 +96,7 @@ func (obj *sessionService) Delete(key string) error {
 func (obj *sessionService) Reset() error {
 	_, err := db.Delete(models.SessionName).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, errors.Report, g.Translator.TranslateEN("ResetSessionFailed"))
+		return errors.New(errors.UnexpectedStatus, errors.Report, g.Trans().TranslateEN("ResetSessionFailed"))
 	}
 
 	return nil

@@ -19,7 +19,7 @@ func Refresh(c *fiber.Ctx) error {
 		token = cookieToken
 	}
 	if token == "" {
-		return errors.New(errors.InvalidStatus, errors.ReSingIn, g.Translator.TranslateEN("NotIncludedToken"))
+		return errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("NotIncludedToken"))
 	}
 
 	uService := user_service.New()
@@ -31,15 +31,15 @@ func Refresh(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("InvalidToken"))
+			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
 		}
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("Unauthorized"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
 	}
 	if !tkn.Valid {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("Unauthorized"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
 	}
 	if claims.Type != contract.RefreshTokenType {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("NotRefreshToken"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("NotRefreshToken"))
 	}
 
 	// Check if refresh token is not used before

@@ -15,7 +15,7 @@ func sessionAuth(c *fiber.Ctx) error {
 	uService := user_service.New()
 	session, err := g.Session.Get(c)
 	if err != nil {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("Unauthorized"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
 	}
 
 	id := session.Get(session.ID()).(int)
@@ -38,17 +38,17 @@ func tokenAuth(c *fiber.Ctx, token string) error {
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("InvalidToken"))
+			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
 		}
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("InvalidToken"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
 	}
 	if !tkn.Valid {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("InvalidToken"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
 	}
 
 	// Check token is not refresh token
 	if claims.Type != contract.AccessTokenType {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("NotAccessToken"))
+		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("NotAccessToken"))
 	}
 
 	user, err := uService.GetUser(g.DB, claims.Username)
@@ -79,5 +79,5 @@ func Auth(c *fiber.Ctx) error {
 		return tokenAuth(c, token)
 	}
 
-	return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("Unauthorized"))
+	return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
 }

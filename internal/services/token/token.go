@@ -30,7 +30,7 @@ func (obj *tokenService) CreateAccessToken(user *models.User) (string, time.Time
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(g.SecretKey)
 	if err != nil {
-		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("GenerationTokenFailed"))
+		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Trans().TranslateEN("GenerationTokenFailed"))
 	}
 
 	return tokenString, expirationTime, nil
@@ -50,7 +50,7 @@ func (obj *tokenService) CreateRefreshToken(db *goqu.Database, user *models.User
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(g.SecretKey)
 	if err != nil {
-		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("GenerationTokenFailed"))
+		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Trans().TranslateEN("GenerationTokenFailed"))
 	}
 
 	rows := []models.RefreshToken{
@@ -59,7 +59,7 @@ func (obj *tokenService) CreateRefreshToken(db *goqu.Database, user *models.User
 
 	_, err = db.Insert(models.RefreshTokenName).Rows(rows).Executor().Exec()
 	if err != nil {
-		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("CreationRefreshTokenFailed"))
+		return "", expirationTime, errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Trans().TranslateEN("CreationRefreshTokenFailed"))
 	}
 
 	return tokenString, expirationTime, nil
@@ -71,7 +71,7 @@ func (obj *tokenService) GetRefreshToken(db *goqu.Database, token string) (*mode
 		"token": token,
 	}).Executor().ScanStruct(refreshToken)
 	if !ok || err != nil {
-		return nil, errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Translator.TranslateEN("UsedRefreshToken"))
+		return nil, errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("UsedRefreshToken"))
 	}
 
 	return refreshToken, nil
@@ -82,7 +82,7 @@ func (obj *tokenService) DeleteRefreshToken(db *goqu.Database, token string) err
 		"token": token,
 	}).Executor().Exec()
 	if err != nil {
-		return errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Translator.TranslateEN("DeletionRefreshTokenFailed"))
+		return errors.New(errors.UnexpectedStatus, errors.ReSingIn, g.Trans().TranslateEN("DeletionRefreshTokenFailed"))
 	}
 	return nil
 }

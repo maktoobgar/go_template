@@ -19,7 +19,7 @@ func SignUp(c *fiber.Ctx) error {
 	uService := user_service.New()
 	req := &signUpRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
 	}
 
 	user, err := uService.CreateUser(g.DB, req.Username, req.Password, req.DisplayName)
@@ -45,7 +45,7 @@ func SignUpToken(c *fiber.Ctx) error {
 	tService := token_service.New()
 	req := &signUpRequest{}
 	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("RequiresNotProvided"))
+		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
 	}
 
 	user, err := uService.CreateUser(g.DB, req.Username, req.Password, req.DisplayName)

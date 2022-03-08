@@ -21,7 +21,7 @@ func (obj *authService) authenticate(db *goqu.Database, username string, passwor
 	}
 
 	if !uService.CheckPasswordHash(password, user.Password) {
-		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Translator.TranslateEN("UnMatchPassword"))
+		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Trans().TranslateEN("UnMatchPassword"))
 	}
 
 	return user, nil
@@ -40,7 +40,7 @@ func (obj *authService) SignUp(db *goqu.Database, username string, password stri
 	uService := user_service.New()
 	_, err := uService.GetUser(db, username)
 	if err == nil {
-		return nil, errors.New(errors.InvalidStatus, errors.ReSingIn, g.Translator.TranslateEN("DuplicateUser"))
+		return nil, errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("DuplicateUser"))
 	}
 
 	user, err := uService.CreateUser(db, username, password, display_name)

@@ -34,12 +34,12 @@ func (obj *userService) CreateUser(db *goqu.Database, username string, password 
 
 	_, err := db.Insert(models.UserName).Rows([]*models.User{user}).Executor().Exec()
 	if err != nil {
-		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
+		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("SignUpFailure"))
 	}
 
 	user, err = obj.GetUser(db, username)
 	if err != nil {
-		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Translator.TranslateEN("SignUpFailure"))
+		return nil, errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("SignUpFailure"))
 	}
 
 	return user, nil
@@ -52,7 +52,7 @@ func (obj *userService) GetUser(db *goqu.Database, username string) (*models.Use
 	}).Executor().ScanStruct(user)
 
 	if !ok || err != nil {
-		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Translator.TranslateEN("UserNotFound"))
+		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Trans().TranslateEN("UserNotFound"))
 	}
 
 	return user, nil
@@ -65,7 +65,7 @@ func (obj *userService) GetUserByID(db *goqu.Database, id string) (*models.User,
 	}).Executor().ScanStruct(user)
 
 	if !ok || err != nil || user == nil {
-		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Translator.TranslateEN("UserNotFound"))
+		return nil, errors.New(errors.NotFoundStatus, errors.Resend, g.Trans().TranslateEN("UserNotFound"))
 	}
 
 	return user, nil
