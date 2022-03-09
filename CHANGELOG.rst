@@ -4,8 +4,12 @@ CHANGELOG
 UNRELEASED
 ----------
 
-* 🎉 feat: setup and run commands added for auto.py script
-* 🎉 feat: auto.py script added and can generate a secret_key for env file
+
+1.2.0 (2022-03-09)
+------------------
+
+* feat: setup and run commands added for auto.py script
+* feat: auto.py script added and can generate a secret_key for env file
 
 1.1.2 (2022-03-09)
 ------------------
