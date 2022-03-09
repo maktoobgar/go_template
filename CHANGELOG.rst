@@ -4,7 +4,11 @@ CHANGELOG
 UNRELEASED
 ----------
 
-* 🐛 fix: default config file is hardcoded in `internal/app/load/cfg.go` cause other solutions are not acceptable
+
+1.1.2 (2022-03-09)
+------------------
+
+* fix: default config file is hardcoded in `internal/app/load/cfg.go` file cause I see no better approach
 
 1.1.1 (2022-03-08)
 ------------------
