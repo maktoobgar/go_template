@@ -21,7 +21,7 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
      * errors.ReSingIn means user has to signin again
      * g.Trans().TranslateEN("NotIncludedToken") tries to translate "NotIncludedToken" and returns the translated value(if translation fails, no error returns and just "NotIncludedToken" returns)
    * [**grpc**](pkg/grpc/): Just simplifies setup for running grpc server.
-   * [**logging**](pkg/logging/): Creates four folders inside `/var/log/project` (this address will be dynamic soon) like: `error`, `info`, `panic` and `warning` and if you use this logger, it will record those logs and put them inside their own folders in files.
+   * [**logging**](pkg/logging/): Creates four folders inside `/var/log/project` like: `error`, `info`, `panic` and `warning` and if you use this logger, it will record those logs and put them inside their own folders in files.
      * Example: `g.Log().Error(fmt.Sprintf("read: %s", err), FunctionWeAreIn, OptionalMap)`
      * First argument is your error message
      * Second argument, as it's name says `FunctionWeAreIn`, you just pass the function you got your error in them
