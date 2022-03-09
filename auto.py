@@ -1,7 +1,6 @@
 #!env/bin/python
 
-import os
-import random, string, sys
+import os, random, string, sys
 
 
 def generate_key(length: int) -> str:
@@ -42,16 +41,63 @@ def env_file_address() -> str:
     elif os.path.isfile('env.yaml'):
         return "env.yaml"
 
-def main() -> None:
-    if sys.argv[1] == "generate":
-        key = generate_key(64)
+def generate_secret_key(do_print: bool) -> None:
+    key = generate_key(64)
+    if do_print:
         print(key)
 
-        if not env_exists():
-            return
-        file_address = env_file_address()
+    if not env_exists():
+        return
+    file_address = env_file_address()
 
-        write_file(file_address, put_this_instead_that(f"\"{key}\"", "secret_key", read_file(file_address), "secret_key: "))
+    write_file(file_address, put_this_instead_that(f"\"{key}\"", "secret_key", read_file(file_address), "secret_key: "))
+
+def install_dependencies() -> None:
+    print("===Installing Dependencies===\n")
+    if os.system("go mod download -x all") != 0:
+        print("installing dependencies failed")
+        return
+
+    if os.system("go get -v github.com/rubenv/sql-migrate/... && git restore go.mod") != 0:
+        print("installing dependencies failed")
+        return
+
+    print("===Done===\n")
+
+    print("===Setup Config Files===\n")
+    if os.system("cp dbconfig_example.yml dbconfig.yml && cp env_example.yml env.yml") != 0:
+        print("dbconfig_example.yml or env_example.yml does not exists")
+        return
+
+    print("===Done===\n")
+
+def how_to_run() -> None:
+    print("===How To Run===\n")
+    print("./auto.py run\n")
+
+def create_python_env() -> None:
+    print("===Creating env Folder===\n")
+    os.system("python3 -m venv env")
+    print("===Done===\n")
+
+def activate_githooks() -> None:
+    print("===Activating Githooks===\n")
+    os.system("python3 .githooks/install.py")
+    print("===Done===\n")
+
+def main() -> None:
+    if sys.argv[1].lower() == "generate":
+        generate_secret_key(True)
+
+    elif sys.argv[1].lower() == "setup":
+        install_dependencies()
+        generate_secret_key(False)
+        create_python_env()
+        activate_githooks()
+        how_to_run()
+
+    elif sys.argv[1].lower() == "run":
+        os.system("go run ./cmd/main/main.go")
 
 
 if __name__ == "__main__":
