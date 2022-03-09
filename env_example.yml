@@ -24,5 +24,8 @@ api:
 grpc:
   ip: 0.0.0.0
 
+secret_key: "update_me_please"
+# you can fill this value with `python3 auto.py generate` script
+
 # For more example see build/config/config.yaml config file
 # The structure for this config file is in internal/config/config.go

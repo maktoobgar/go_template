@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🎉 feat: auto.py script added and can generate a secret_key for env file
 
 1.1.2 (2022-03-09)
 ------------------
