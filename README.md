@@ -10,7 +10,7 @@ If you do love to contribute, please do, I appreciate it.
 
 And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know about how to contribute in this project.
 
-## Features
+# Features
 
 1. [**pkg**](./pkg):
    * [**config**](pkg/config): Inside this package, I implemented a functionality which reads files and fills up passed config structure instances. You can just use output of this package which is inside `g.CFG` structure.
@@ -46,7 +46,7 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
    * running fiber (api, socket) and grpc with a single command
      * **Note**: grpc and fiber can't run on the same port
 
-## Quick Start
+# Quick Start
 
 1. Install Dependencies:
    * ```
@@ -91,6 +91,7 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
         go run ./cmd/main/main.go -app=grpc
         ```
 
+# Documentation
 ## Clean Architecture
 
 If you don't have any idea about **clean** architecture, please just take a moment and just have a look at it first and after understanding the architecture, come back here and continue.
@@ -189,6 +190,14 @@ Just take a look at middleware examples inside `internal/middleware` folder and 
 ### How To Register Middlewares
 
 Inside `internal/routers/http.go` file for http methods or `internal/routers/ws.go` file for socket methods, create a group of your url address and add your middleware inside it.
+
+## `auto.py` Script
+
+On root project directory, there is a file named `auto.py` and right now it's simple purpose is to generate a `secret_key` for `env.yaml` or `env.yml` file.\
+For generating `secret_key`, type:
+```
+python3 auto.py generate
+```
 
 [config.yaml]: build/config/config.yaml
 [cfg.go]: internal/app/load/cfg.go
