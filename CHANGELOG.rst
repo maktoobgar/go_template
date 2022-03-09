@@ -4,6 +4,7 @@ CHANGELOG
 UNRELEASED
 ----------
 
+* 🐛 fix: default config file is hardcoded in `internal/app/load/cfg.go` cause other solutions are not acceptable
 
 1.1.1 (2022-03-08)
 ------------------

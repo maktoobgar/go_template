@@ -42,12 +42,12 @@ func setPwd() {
 
 // Initialization for config files in configs folder
 func initializeConfigs() {
-	setPwd()
-	if err := config.ReadProjectConfigs(cfg.PWD, cfg); err != nil {
+	// Loads default config, you just have to hard code it
+	if err := config.Parse("build/config/config.yaml", cfg, true); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err := config.ReadLocalConfigs(cfg.PWD, cfg); err != nil {
+	if err := config.ReadLocalConfigs(cfg); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -69,7 +69,7 @@ func initializeSession() {
 
 // Translator initialization
 func initialTranslator() {
-	t, err := translator.New(filepath.Join(cfg.PWD, cfg.Translator.Path), languages[0], languages[1:]...)
+	t, err := translator.New(cfg.Translator.Path, languages[0], languages[1:]...)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -117,6 +117,7 @@ func initialDBs() {
 
 // Server initialization
 func init() {
+	setPwd()
 	initializeConfigs()
 	initializeSession()
 	initialTranslator()
