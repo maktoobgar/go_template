@@ -48,48 +48,56 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
 
 # Quick Start
 
-1. Install Dependencies:
-   * ```
-     go mod download -x all
-     go get -v github.com/rubenv/sql-migrate/... && git restore go.mod
-     ```
-   * **Note**: For migrations you most likely need `sql-migrate`.
+There are two ways:
+1. You can just run `auto.py` script like:
+   ```
+   python3 auto.py setup
+   ```
 
-2. Copy and paste these lines in your terminal when you're inside project root directory:
-   * ```bash
-      cp dbconfig_example.yml dbconfig.yml
-      cp env_example.yml env.yml
-      ```
-   * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
-
-3. How to run:
-   1. If you want to run **socket**, **api** and **grpc** all in one action. run `cmd/main/main.go` file like:
-       * ```bash
-          go run ./cmd/main/main.go
-          # or
-          go run ./cmd/main/main.go -app=0
-          # or
-          go run ./cmd/main/main.go -app=b
-          # or
-          go run ./cmd/main/main.go -app=both
-          ```
-   2. If you want to run **socket** and **api**, run `cmd/main/main.go` file like:
-       * ```bash
-          go run ./cmd/main/main.go -app=1
-          # or
-          go run ./cmd/main/main.go -app=f
-          # or
-          go run ./cmd/main/main.go -app=fiber
-          ```
-
-   3. If you want to run **grpc** server, run `cmd/main/main.go` file like:
-      * ```bash
-        go run ./cmd/main/main.go -app=2
-        # or
-        go run ./cmd/main/main.go -app=g
-        # or
-        go run ./cmd/main/main.go -app=grpc
+2. Or you can do it all by yourself:
+   1. Install Dependencies:
+      * ```
+        go mod download -x all
+        go get -v github.com/rubenv/sql-migrate/... && git restore go.mod
         ```
+      * **Note**: For migrations you most likely need `sql-migrate`.
+
+   2. Copy and paste these lines in your terminal when you're inside project root directory:
+      * ```bash
+         cp dbconfig_example.yml dbconfig.yml
+         cp env_example.yml env.yml
+         ```
+      * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
+
+   3. You can run `.githooks/install.py` script to activate custom githooks inside `.githooks` folder if you want.
+   4. How to run:
+      1. If you want to run **socket**, **api** and **grpc** all in one action. run `cmd/main/main.go` file like:
+          * ```bash
+             go run ./cmd/main/main.go
+             # or
+             go run ./cmd/main/main.go -app=0
+             # or
+             go run ./cmd/main/main.go -app=b
+             # or
+             go run ./cmd/main/main.go -app=both
+             ```
+      2. If you want to run **socket** and **api**, run `cmd/main/main.go` file like:
+          * ```bash
+             go run ./cmd/main/main.go -app=1
+             # or
+             go run ./cmd/main/main.go -app=f
+             # or
+             go run ./cmd/main/main.go -app=fiber
+             ```
+
+      3. If you want to run **grpc** server, run `cmd/main/main.go` file like:
+         * ```bash
+           go run ./cmd/main/main.go -app=2
+           # or
+           go run ./cmd/main/main.go -app=g
+           # or
+           go run ./cmd/main/main.go -app=grpc
+           ```
 
 # Documentation
 ## Clean Architecture
@@ -193,11 +201,20 @@ Inside `internal/routers/http.go` file for http methods or `internal/routers/ws.
 
 ## `auto.py` Script
 
-On root project directory, there is a file named `auto.py` and right now it's simple purpose is to generate a `secret_key` for `env.yaml` or `env.yml` file.\
-For generating `secret_key`, type:
-```
-python3 auto.py generate
-```
+On root project directory, there is a file named `auto.py`, it does three jobs:
+
+1. Generates `secret_key` for `env.yml` or `env.yaml` file:
+   ```
+   python3 auto.py generate
+   ```
+2. Does everything said inside [Quick Start](#quick-start) section:
+   ```
+   python3 auto.py setup
+   ```
+3. Runs the project:
+   ```
+   python3 auto.py run
+   ```
 
 [config.yaml]: build/config/config.yaml
 [cfg.go]: internal/app/load/cfg.go
