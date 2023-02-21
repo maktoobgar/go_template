@@ -19,8 +19,7 @@ import (
 var (
 	// Four folders that will be created inside the path you
 	// give in `New` function for logs
-	folderNames                    = []string{"info", "warning", "error", "panic"}
-	errOperationSystemNotSupported = fmt.Errorf("%s operation system not supported", runtime.GOOS)
+	folderNames = []string{"info", "warning", "error", "panic"}
 )
 
 // Struct that will returns in `New` function
@@ -117,14 +116,7 @@ func createAddress(address string) error {
 		addrSep string = ""
 	)
 
-	if runtime.GOOS == "windows" {
-		addrSep = "\\"
-	} else if runtime.GOOS == "linux" {
-		addrSep = "/"
-	} else {
-		return errOperationSystemNotSupported
-	}
-
+	addrSep = "/"
 	createIfDoesNotExist := func(addr *string) error {
 		if _, err := os.Stat(*addr); os.IsNotExist(err) {
 			var cmd *exec.Cmd

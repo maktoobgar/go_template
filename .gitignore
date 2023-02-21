@@ -8,7 +8,6 @@ env
 # go
 
 vendor
-go.sum
 
 # vscode
 

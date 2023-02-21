@@ -5,10 +5,9 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/doug-martin/goqu/v9"
-	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/maktoobgar/go_template/build"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
 	g "github.com/maktoobgar/go_template/internal/global"
@@ -43,7 +42,7 @@ func setPwd() {
 // Initialization for config files in configs folder
 func initializeConfigs() {
 	// Loads default config, you just have to hard code it
-	if err := config.Parse("build/config/config.yaml", cfg, true); err != nil {
+	if err := config.ParseYamlBytes(build.Config, cfg); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -51,29 +50,17 @@ func initializeConfigs() {
 		log.Fatalln(err)
 	}
 
-	config.SetConfig(cfg)
 	g.CFG = cfg
 	g.SecretKey = []byte(cfg.SecretKey)
 }
 
-// Initialization for session_service
-func initializeSession() {
-	g.Session = session.New(session.Config{
-		Expiration:   (time.Hour * 24) * 7,
-		Storage:      session_service.New(),
-		KeyLookup:    "header:session_id",
-		CookieSecure: !g.CFG.Debug,
-		CookieDomain: g.CFG.Domain,
-	})
-}
-
 // Translator initialization
 func initialTranslator() {
-	t, err := translator.New(cfg.Translator.Path, languages[0], languages[1:]...)
+	t, err := translator.New(build.Translations, languages[0], languages[1:]...)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	g.Translator = t.(*translator.TranslatorPack)
+	g.Translator = t
 }
 
 // Logger initialization
@@ -84,7 +71,7 @@ func initialLogger() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	g.Logger = l.(*logging.LogBundle)
+	g.Logger = l
 }
 
 // Run dbs
@@ -97,12 +84,9 @@ func initialDBs() {
 	var db *goqu.Database = nil
 	var ok bool = false
 	if !g.CFG.Debug {
-		db, ok = g.AllDBs["auth"]
+		db, ok = g.AllDBs["main"]
 		if !ok {
-			db, ok = g.AllDBs["main"]
-			if !ok {
-				log.Fatalln(errors.New("both 'main' and 'auth' dbs are not defined (at least one of them required)"))
-			}
+			log.Fatalln(errors.New("'main' db is not defined (required)"))
 		}
 	} else {
 		db, ok = g.AllDBs["test"]
@@ -119,7 +103,6 @@ func initialDBs() {
 func init() {
 	setPwd()
 	initializeConfigs()
-	initializeSession()
 	initialTranslator()
 	initialLogger()
 	initialDBs()

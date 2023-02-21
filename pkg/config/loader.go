@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	// Main project configs
-	cfg                     interface{}
+	// An error which returns when file extension is unknown
 	ErrUnknownFileExtention error = errors.New("unknown file extention")
 )
 
@@ -35,9 +34,8 @@ func ReadLocalConfigs(cfg interface{}) error {
 	return nil
 }
 
-// Gets the `conf` pointer and makes `cfg` global variable to point out where `conf` points
-func SetConfig(conf interface{}) {
-	cfg = conf
+func ParseYamlBytes(data []byte, cfg interface{}) error {
+	return yaml.Unmarshal(data, cfg)
 }
 
 // Parses configuration data of a yaml file

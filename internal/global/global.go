@@ -15,8 +15,8 @@ import (
 var CFG *config.Config = nil
 
 // Utilities
-var Logger *logging.LogBundle = nil
-var Translator *translator.TranslatorPack = nil
+var Logger logging.Logger = nil
+var Translator translator.Translator = nil
 var Session *session.Store = nil
 
 // App
@@ -41,11 +41,3 @@ var SqliteCons = map[string]*sql.DB{}
 var MySQLCons = map[string]*sql.DB{}
 var SqlServerCons = map[string]*sql.DB{}
 var AllCons = map[string]*sql.DB{}
-
-func Log() logging.Logger {
-	return Logger
-}
-
-func Trans() translator.Translator {
-	return Translator
-}
