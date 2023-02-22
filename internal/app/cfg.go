@@ -6,13 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/doug-martin/goqu/v9"
 	"github.com/maktoobgar/go_template/build"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
 	g "github.com/maktoobgar/go_template/internal/global"
-	csrf_service "github.com/maktoobgar/go_template/internal/services/csrf"
-	session_service "github.com/maktoobgar/go_template/internal/services/session"
 	"github.com/maktoobgar/go_template/pkg/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
@@ -81,22 +78,18 @@ func initialDBs() {
 		log.Fatalln(err)
 	}
 
-	var db *goqu.Database = nil
 	var ok bool = false
 	if !g.CFG.Debug {
-		db, ok = g.AllDBs["main"]
+		_, ok = g.AllDBs["main"]
 		if !ok {
 			log.Fatalln(errors.New("'main' db is not defined (required)"))
 		}
 	} else {
-		db, ok = g.AllDBs["test"]
+		_, ok = g.AllDBs["test"]
 		if !ok {
 			log.Fatalln(errors.New("'test' db is not defined"))
 		}
 	}
-
-	csrf_service.SetDB(db)
-	session_service.SetDB(db)
 }
 
 // Server initialization

@@ -3,7 +3,6 @@ module github.com/maktoobgar/go_template
 go 1.17
 
 require (
-	github.com/BurntSushi/toml v1.0.0
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137
 	github.com/denisenkom/go-mssqldb v0.12.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

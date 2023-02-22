@@ -1,5 +1,7 @@
 package translator
 
+type TranslatorFunc func(string) string
+
 type Translator interface {
-	TranslateFunction(language string) func(string) string
+	TranslateFunction(language string) TranslatorFunc
 }

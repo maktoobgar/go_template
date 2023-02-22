@@ -1,12 +1,29 @@
 package httpHandlers
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	g "github.com/maktoobgar/go_template/internal/global"
 )
 
-func Hi(ctx *fiber.Ctx) error {
-	msg := fmt.Sprintf("✋ %s", ctx.Params("name"))
-	return ctx.SendString(msg)
+type hiResponse struct {
+	Message string `json:"message"`
+}
+
+func hi(w http.ResponseWriter, r *http.Request) {
+	splits := strings.Split(r.URL.Path, "/")
+	name := splits[2]
+	msg := fmt.Sprintf("✋ %s", name)
+	res := hiResponse{
+		Message: msg,
+	}
+	resBytes, _ := json.Marshal(res)
+	w.Write(resBytes)
+}
+
+var Hi = g.Handler{
+	Handler: hi,
 }

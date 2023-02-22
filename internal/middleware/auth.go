@@ -1,34 +1,19 @@
 package middleware
 
 import (
-	"fmt"
+	"context"
+	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gofiber/fiber/v2"
 	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
 	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
-func sessionAuth(c *fiber.Ctx) error {
-	uService := user_service.New()
-	session, err := g.Session.Get(c)
-	if err != nil {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
-	}
-
-	id := session.Get(session.ID()).(int)
-	user, err := uService.GetUserByID(g.DB, fmt.Sprint(id))
-	if err != nil {
-		return err
-	}
-
-	c.Locals("user", user)
-	return c.Next()
-}
-
-func tokenAuth(c *fiber.Ctx, token string) error {
+func tokenAuth(token string, ctx context.Context) context.Context {
+	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	uService := user_service.New()
 	claims := &contract.Claims{}
 
@@ -38,46 +23,37 @@ func tokenAuth(c *fiber.Ctx, token string) error {
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
+			panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("InvalidToken")))
 		}
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("InvalidToken")))
 	}
 	if !tkn.Valid {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("InvalidToken")))
 	}
 
 	// Check token is not refresh token
 	if claims.Type != contract.AccessTokenType {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("NotAccessToken"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("NotAccessToken")))
 	}
 
-	user, err := uService.GetUser(g.DB, claims.Username)
-	if err != nil {
-		return err
-	}
+	user := uService.GetUser(g.DB, ctx, claims.Username)
 
-	c.Locals("user", user)
-	return c.Next()
+	ctx = context.WithValue(ctx, "user", user)
+	return ctx
 }
 
-func Auth(c *fiber.Ctx) error {
-	// Checking for session authentication
-	sessionID, _ := g.Session.Storage.Get(c.GetReqHeaders()["Session_id"])
-	if cookieSessionID := c.Request().Header.Cookie("session_id"); sessionID == nil {
-		c.GetReqHeaders()["Session_id"] = string(cookieSessionID)
-	}
-	if sessionID != nil {
-		return sessionAuth(c)
-	}
+// Checking for token authentication
+func Auth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		translate := ctx.Value("translate").(translator.TranslatorFunc)
+		var token = r.Header.Get("Token")
+		if token == "" {
+			panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("Unauthorized")))
+		}
 
-	// Checking for token authentication
-	var token = c.GetReqHeaders()["Token"]
-	if cookieToken := string(c.Request().Header.Cookie("token")); token == "" {
-		token = cookieToken
-	}
-	if token != "" {
-		return tokenAuth(c, token)
-	}
-
-	return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
+		ctx = tokenAuth(token, r.Context())
+		r = r.WithContext(ctx)
+		next.ServeHTTP(w, r)
+	})
 }

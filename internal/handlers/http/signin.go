@@ -1,88 +1,50 @@
 package httpHandlers
 
 import (
-	"time"
+	"encoding/json"
+	"net/http"
 
-	"github.com/gofiber/fiber/v2"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/handlers/utils"
+	"github.com/maktoobgar/go_template/internal/models"
 	auth_service "github.com/maktoobgar/go_template/internal/services/auth"
 	token_service "github.com/maktoobgar/go_template/internal/services/token"
-	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
 type signInRequest struct {
-	Username string `json:"username" xml:"username" form:"username" required:"true"`
-	Password string `json:"password" xml:"password" form:"password" required:"true"`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
-func SignIn(c *fiber.Ctx) error {
-	req := &signInRequest{}
-	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
-	}
-
-	auth := auth_service.New()
-	user, err := auth.SignIn(g.DB, req.Username, req.Password)
-	if err != nil {
-		return err
-	}
-
-	session, err := g.Session.Get(c)
-	if err != nil {
-		return err
-	}
-	defer session.Save()
-
-	if !session.Fresh() {
-		err = session.Regenerate()
-		if err != nil {
-			return err
-		}
-	}
-	session.Set(session.ID(), user.ID)
-
-	c.Cookie(&fiber.Cookie{
-		Name:    "session_id",
-		Value:   session.ID(),
-		Expires: time.Now().Add(((time.Hour * 24) * 7)),
-	})
-
-	data := user.Clean()
-	data["SessionID"] = session.ID()
-	return c.JSON(data)
+type signInResponse struct {
+	User         models.UserCore `json:"user"`
+	AccessToken  string          `json:"access_token"`
+	RefreshToken string          `json:"refresh_token"`
 }
 
-func SignInToken(c *fiber.Ctx) error {
+func signIn(w http.ResponseWriter, r *http.Request) {
 	tService := token_service.New()
 	req := &signInRequest{}
-	if err := c.BodyParser(req); err != nil || !utils.Required(req) {
-		return errors.New(errors.InvalidStatus, errors.Resend, g.Trans().TranslateEN("RequiresNotProvided"))
-	}
+	ctx := r.Context()
+	translate := ctx.Value("translate").(translator.TranslatorFunc)
+	utils.ParseBody(r.Body, translate, req)
 
 	auth := auth_service.New()
-	user, err := auth.SignIn(g.DB, req.Username, req.Password)
-	if err != nil {
-		return err
-	}
+	user := auth.SignIn(g.DB, ctx, req.Username, req.Password)
 
-	accessTokenString, expirationTime, err := tService.CreateAccessToken(user)
-	if err != nil {
-		return err
-	}
-	refreshTokenString, _, err := tService.CreateRefreshToken(g.DB, user)
-	if err != nil {
-		return err
-	}
+	accessTokenString, _ := tService.CreateAccessToken(user, ctx)
+	refreshTokenString, _ := tService.CreateRefreshToken(g.DB, ctx, user)
 
-	c.Cookie(&fiber.Cookie{
-		Name:    "token",
-		Value:   accessTokenString,
-		Expires: expirationTime,
-	})
+	res := signInResponse{
+		User:         user.UserCore,
+		AccessToken:  accessTokenString,
+		RefreshToken: refreshTokenString,
+	}
+	resBytes, _ := json.Marshal(res)
+	w.Write(resBytes)
+}
 
-	data := user.Clean()
-	data["AccessToken"] = accessTokenString
-	data["RefreshToken"] = refreshTokenString
-	return c.JSON(data)
+var SignIn = g.Handler{
+	Handler: signIn,
 }

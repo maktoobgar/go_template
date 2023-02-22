@@ -1,54 +1,47 @@
 package auth_service
 
 import (
+	"context"
+
 	"github.com/doug-martin/goqu/v9"
 	"github.com/maktoobgar/go_template/internal/contract"
-	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
 	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
 type authService struct{}
 
 var instance = &authService{}
 
-func (obj *authService) authenticate(db *goqu.Database, username string, password string) (*models.User, error) {
+func (obj *authService) authenticate(db *goqu.Database, ctx context.Context, username string, password string) *models.User {
+	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	uService := user_service.New()
-	user, err := uService.GetUser(db, username)
-	if err != nil {
-		return nil, err
-	}
+	user := uService.GetUser(db, ctx, username)
 
 	if !uService.CheckPasswordHash(password, user.Password) {
-		return nil, errors.New(errors.UnauthorizedStatus, errors.Resend, g.Trans().TranslateEN("UnMatchPassword"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.Resend, translate("UnMatchPassword")))
 	}
 
-	return user, nil
+	return user
 }
 
-func (obj *authService) SignIn(db *goqu.Database, username string, password string) (*models.User, error) {
-	user, err := obj.authenticate(db, username, password)
-	if err != nil || user == nil {
-		return nil, err
-	}
-
-	return user, nil
+func (obj *authService) SignIn(db *goqu.Database, ctx context.Context, username string, password string) *models.User {
+	return obj.authenticate(db, ctx, username, password)
 }
 
-func (obj *authService) SignUp(db *goqu.Database, username string, password string, display_name string) (*models.User, error) {
+func (obj *authService) SignUp(db *goqu.Database, ctx context.Context, username string, password string, display_name string) *models.User {
+	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	uService := user_service.New()
-	_, err := uService.GetUser(db, username)
-	if err == nil {
-		return nil, errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("DuplicateUser"))
+	user := uService.SafeGetUser(db, ctx, username)
+	if user == nil {
+		user = uService.CreateUser(db, ctx, username, password, display_name)
+	} else {
+		panic(errors.New(errors.UnauthorizedStatus, errors.Resend, translate("DuplicateUser")))
 	}
 
-	user, err := uService.CreateUser(db, username, password, display_name)
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	return user
 }
 
 func New() contract.AuthService {

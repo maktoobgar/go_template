@@ -1,6 +1,7 @@
 package contract
 
 import (
+	"context"
 	"time"
 
 	"github.com/doug-martin/goqu/v9"
@@ -9,11 +10,13 @@ import (
 
 type TokenService interface {
 	// Returns token string, expire time and error
-	CreateAccessToken(user *models.User) (string, time.Time, error)
+	CreateAccessToken(user *models.User, ctx context.Context) (string, time.Time)
 	// Returns refresh token object, expire time and error
-	CreateRefreshToken(db *goqu.Database, user *models.User) (string, time.Time, error)
+	CreateRefreshToken(db *goqu.Database, ctx context.Context, user *models.User) (string, time.Time)
 	// Returns a refresh token from database
-	GetRefreshToken(db *goqu.Database, token string) (*models.RefreshToken, error)
+	GetRefreshToken(db *goqu.Database, ctx context.Context, token string) *models.RefreshToken
+	// Returns a refresh token from database without panic
+	SafeGetRefreshToken(db *goqu.Database, ctx context.Context, token string) *models.RefreshToken
 	// Deletes a refresh token from database
-	DeleteRefreshToken(db *goqu.Database, token string) error
+	DeleteRefreshToken(db *goqu.Database, ctx context.Context, token string)
 }

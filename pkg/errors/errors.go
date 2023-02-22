@@ -26,13 +26,16 @@ const (
 	// InternalServerError 500
 	UnexpectedStatus
 	// MethodNotAllowed 405
-	NotAllowedStatus
+	MethodNotAllowedStatus
+	// Forbidden 403
+	ForbiddenStatus
 )
 
 const (
-	_ int = iota
+	// Do nothing
+	DoNothing int = iota
 	// SignIn in again
-	ReSingIn
+	ReSignIn
 	// Report the problem
 	Report
 	// Correct sent data and request again
@@ -41,11 +44,12 @@ const (
 
 var (
 	httpErrors = map[int]int{
-		InvalidStatus:      http.StatusBadRequest,
-		NotFoundStatus:     http.StatusNotFound,
-		UnauthorizedStatus: http.StatusUnauthorized,
-		UnexpectedStatus:   http.StatusInternalServerError,
-		NotAllowedStatus:   http.StatusMethodNotAllowed,
+		InvalidStatus:          http.StatusBadRequest,
+		NotFoundStatus:         http.StatusNotFound,
+		UnauthorizedStatus:     http.StatusUnauthorized,
+		UnexpectedStatus:       http.StatusInternalServerError,
+		MethodNotAllowedStatus: http.StatusMethodNotAllowed,
+		ForbiddenStatus:        http.StatusForbidden,
 	}
 )
 

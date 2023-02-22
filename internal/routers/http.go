@@ -1,30 +1,25 @@
 package routers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"net/http"
+
 	httpHandler "github.com/maktoobgar/go_template/internal/handlers/http"
-	"github.com/maktoobgar/go_template/internal/middleware"
+	m "github.com/maktoobgar/go_template/internal/middleware"
 )
 
-func Http(app *fiber.App) {
-	// /api
-	apiGroup := app.Group("/api")
+func basicMiddlewares(next http.Handler, methods ...string) http.Handler {
+	return m.Panic(m.Json(m.Translator(m.Cors(m.Method(next, methods...)))))
+}
 
-	// /api/me
-	meGroup := apiGroup.Group("/me", middleware.Auth)
-	meGroup.Get("/", httpHandler.Me).Name("Me")
-
-	// /api/:name?
-	apiGroup.Get(":name?", httpHandler.Hi).Name("Hi")
+func HTTP(mux *http.ServeMux) {
+	mux.Handle("/", basicMiddlewares(httpHandler.NotFound))
+	mux.Handle("/api/", basicMiddlewares(httpHandler.Hi, "GET"))
+	mux.Handle("/api/me", basicMiddlewares(m.Auth(httpHandler.Me), "GET"))
 
 	// /api/auth
-	authGroup := apiGroup.Group("/auth")
-	authGroup.Post("/signIn", httpHandler.SignIn).Name("SignIn")
-	authGroup.Post("/signUp", httpHandler.SignUp).Name("SignUp")
-
-	// /api/auth/token
-	tokenGroup := authGroup.Group("/token")
-	tokenGroup.Post("/signin", httpHandler.SignInToken).Name("SignInToken")
-	tokenGroup.Post("/signup", httpHandler.SignUpToken).Name("SignUpToken")
-	tokenGroup.Post("/refresh", httpHandler.Refresh).Name("Refresh")
+	{
+		mux.Handle("/api/auth/sign_in", basicMiddlewares(httpHandler.SignIn, "POST"))
+		mux.Handle("/api/auth/sign_up", basicMiddlewares(httpHandler.SignUp, "POST"))
+		mux.Handle("/api/auth/refresh", basicMiddlewares(httpHandler.Refresh, "POST"))
+	}
 }

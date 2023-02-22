@@ -1,25 +1,32 @@
 package httpHandlers
 
 import (
+	"encoding/json"
+	"net/http"
+
 	"github.com/dgrijalva/jwt-go"
-	"github.com/gofiber/fiber/v2"
 	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
 	token_service "github.com/maktoobgar/go_template/internal/services/token"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
 	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
-func Refresh(c *fiber.Ctx) error {
+type refreshResponse struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+func refresh(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	tService := token_service.New()
 
 	// Checking for token authentication
-	var token = c.GetReqHeaders()["Token"]
-	if cookieToken := string(c.Request().Header.Cookie("token")); token == "" {
-		token = cookieToken
-	}
+	var token = r.Header.Get("Token")
 	if token == "" {
-		return errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("NotIncludedToken"))
+		panic(errors.New(errors.InvalidStatus, errors.ReSignIn, translate("NotIncludedToken")))
 	}
 
 	uService := user_service.New()
@@ -31,52 +38,40 @@ func Refresh(c *fiber.Ctx) error {
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("InvalidToken"))
+			panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("InvalidToken")))
 		}
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("Unauthorized")))
 	}
 	if !tkn.Valid {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("Unauthorized"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("Unauthorized")))
 	}
 	if claims.Type != contract.RefreshTokenType {
-		return errors.New(errors.UnauthorizedStatus, errors.ReSingIn, g.Trans().TranslateEN("NotRefreshToken"))
+		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("NotRefreshToken")))
 	}
 
 	// Check if refresh token is not used before
-	_, err = tService.GetRefreshToken(g.DB, token)
-	if err != nil {
-		return err
+	refreshToken := tService.SafeGetRefreshToken(g.DB, ctx, token)
+	if refreshToken == nil {
+		panic(errors.New(errors.InvalidStatus, errors.ReSignIn, translate("UsedRefreshToken")))
 	}
 
 	// Get user object
-	user, err := uService.GetUser(g.DB, claims.Username)
-	if err != nil {
-		return err
-	}
+	user := uService.GetUser(g.DB, ctx, claims.Username)
 
 	// Generate access and refresh tokens
-	tokenString, expirationTime, err := tService.CreateAccessToken(user)
-	if err != nil {
-		return err
-	}
-	refreshTokenString, _, err := tService.CreateRefreshToken(g.DB, user)
-	if err != nil {
-		return err
-	}
+	tokenString, _ := tService.CreateAccessToken(user, ctx)
+	refreshTokenString, _ := tService.CreateRefreshToken(g.DB, ctx, user)
 
-	err = tService.DeleteRefreshToken(g.DB, token)
-	if err != nil {
-		return err
+	tService.DeleteRefreshToken(g.DB, ctx, token)
+
+	res := refreshResponse{
+		AccessToken:  tokenString,
+		RefreshToken: refreshTokenString,
 	}
+	resBytes, _ := json.Marshal(res)
+	w.Write(resBytes)
+}
 
-	c.Cookie(&fiber.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
-
-	data := map[string]string{}
-	data["AccessToken"] = tokenString
-	data["RefreshToken"] = refreshTokenString
-	return c.JSON(data)
+var Refresh = g.Handler{
+	Handler: refresh,
 }

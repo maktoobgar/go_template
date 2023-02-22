@@ -19,7 +19,6 @@ const (
 type TranslatorPack struct {
 	bundle         *i18n.Bundle
 	addedLanguages []string
-	fs             fs.FS
 	localizers     map[string]*i18n.Localizer
 }
 
@@ -56,8 +55,8 @@ func New(fileSystem fs.FS, defaultLanguage language.Tag, languages ...language.T
 //
 // You can get your language string code with using "golang.org/x/text/language"
 // library like: language.English.String()
-func (translator *TranslatorPack) TranslateFunction(language string) func(string) string {
-	localizer, err := translator.returnLocalizer(language)
+func (translator *TranslatorPack) TranslateFunction(language string) TranslatorFunc {
+	localizer, err := translator.returnLocalizer(language[:2])
 	if err != nil {
 		return func(word string) string { return word }
 	}

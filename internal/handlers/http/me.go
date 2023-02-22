@@ -1,11 +1,19 @@
 package httpHandlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"encoding/json"
+	"net/http"
+
+	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
 )
 
-func Me(c *fiber.Ctx) error {
-	user := c.Locals("user").(*models.User)
-	return c.JSON(user.Clean())
+func me(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user").(*models.User)
+	userBytes, _ := json.Marshal(user)
+	w.Write(userBytes)
+}
+
+var Me = g.Handler{
+	Handler: me,
 }

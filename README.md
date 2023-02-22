@@ -13,85 +13,93 @@ And ofcourse don't forget to read [CONTRIBUTING](/CONTRIBUTING.md) file to know 
 # Features
 
 1. [**pkg**](./pkg):
-   * [**config**](pkg/config): Inside this package, I implemented a functionality which reads files and fills up passed config structure instances. You can just use output of this package which is inside `g.CFG` structure.
-   * [**database**](pkg/database): Simply you just pass your data about your database connections to `New` function and it tries to create database connections and their query builders and return them all.
-   * [**errors**](pkg/errors/): If you need to return an error in any where in your `fiber` project (**socket** and **api**), use `New` function and give it an `status code`, an `action` and a `message` and return that error that function gives to you, this makes your error responses to users much more beautiful.
-     * Example: `errors.New(errors.InvalidStatus, errors.ReSingIn, g.Trans().TranslateEN("NotIncludedToken"))`
-     * errors.InvalidStatus means 400 bad request status code
-     * errors.ReSingIn means user has to signin again
-     * g.Trans().TranslateEN("NotIncludedToken") tries to translate "NotIncludedToken" and returns the translated value(if translation fails, no error returns and just "NotIncludedToken" returns)
-   * [**grpc**](pkg/grpc/): Just simplifies setup for running grpc server.
-   * [**logging**](pkg/logging/): Creates four folders inside `/var/log/project` like: `error`, `info`, `panic` and `warning` and if you use this logger, it will record those logs and put them inside their own folders in files.
-     * Example: `g.Log().Error(fmt.Sprintf("read: %s", err), FunctionWeAreIn, OptionalMap)`
-     * First argument is your error message
-     * Second argument, as it's name says `FunctionWeAreIn`, you just pass the function you got your error in them
-     * Third argument, is just a map that if you want to provide new information, you can provide your other data in them
-   * [**translator**](pkg/translator/): This is the package which reads translations inside your translation folder which by default your translation folder is defined in default config file(which is in `build/config/config.yaml`) inside `build/translations` and you can use this tool to translate.
-     * Example: `g.Trans().TranslateEN("RequiresNotProvided")`
-     * Example: `g.Trans().Translate(language.English.String(), "RequiresNotProvided")`
+
+   - [**config**](pkg/config): Inside this package, I implemented a functionality which reads files and fills up passed config structure instances. You can just use output of this package which is inside `g.CFG` structure.
+   - [**database**](pkg/database): Simply you just pass your data about your database connections to `New` function and it tries to create database connections and their query builders and return them all.
+   - [**errors**](pkg/errors/): If you need to return an error in any where in your `fiber` project (**socket** and **api**), use `New` function and give it an `status code`, an `action` and a `message` and return that error that function gives to you, this makes your error responses to users much more beautiful.
+     - Example: `errors.New(errors.InvalidStatus, errors.ReSignIn, g.Trans().TranslateEN("NotIncludedToken"))`
+     - errors.InvalidStatus means 400 bad request status code
+     - errors.ReSignIn means user has to signin again
+     - g.Trans().TranslateEN("NotIncludedToken") tries to translate "NotIncludedToken" and returns the translated value(if translation fails, no error returns and just "NotIncludedToken" returns)
+   - [**grpc**](pkg/grpc/): Just simplifies setup for running grpc server.
+   - [**logging**](pkg/logging/): Creates four folders inside `/var/log/project` like: `error`, `info`, `panic` and `warning` and if you use this logger, it will record those logs and put them inside their own folders in files.
+     - Example: `g.Log().Error(fmt.Sprintf("read: %s", err), FunctionWeAreIn, OptionalMap)`
+     - First argument is your error message
+     - Second argument, as it's name says `FunctionWeAreIn`, you just pass the function you got your error in them
+     - Third argument, is just a map that if you want to provide new information, you can provide your other data in them
+   - [**translator**](pkg/translator/): This is the package which reads translations inside your translation folder which by default your translation folder is defined in default config file(which is in `build/config/config.yaml`) inside `build/translations` and you can use this tool to translate.
+     - Example: `g.Trans().TranslateEN("RequiresNotProvided")`
+     - Example: `g.Trans().Translate(language.English.String(), "RequiresNotProvided")`
 
 2. [**internal**](./internal/):
-   * api
-   * socket
-   * grpc
-   * multi database support
-   * jwt authentication
-   * session authentication
-   * csrf
-   * users service(sign in, sign up and create users)
-   * flexible configuration files
-   * not being dependable on which database you use
-   * using sql-migrate tool for migrations
-   * using fiber as http response handler for api and socket connections
-   * running fiber (api, socket) and grpc with a single command
-     * **Note**: grpc and fiber can't run on the same port
+   - api
+   - socket
+   - grpc
+   - multi database support
+   - jwt authentication
+   - session authentication
+   - csrf
+   - users service(sign in, sign up and create users)
+   - flexible configuration files
+   - not being dependable on which database you use
+   - using sql-migrate tool for migrations
+   - using fiber as http response handler for api and socket connections
+   - running fiber (api, socket) and grpc with a single command
+     - **Note**: grpc and fiber can't run on the same port
 
 # Quick Start
 
 There are two ways:
+
 1. You can just run `auto.py` script like:
+
    ```
    python3 auto.py setup
    ```
 
 2. Or you can do it all by yourself:
+
    1. Install Dependencies:
-      * ```
+
+      - ```
         go mod download -x all
         go get -v github.com/rubenv/sql-migrate/... && git restore go.mod
         ```
-      * **Note**: For migrations you most likely need `sql-migrate`.
+      - **Note**: For migrations you most likely need `sql-migrate`.
 
    2. Copy and paste these lines in your terminal when you're inside project root directory:
-      * ```bash
+
+      - ```bash
          cp dbconfig_example.yml dbconfig.yml
          cp env_example.yml env.yml
-         ```
-      * Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
+        ```
+      - Those example files(env_example.yml and dbconfig_example.yml) have ready configurations for a quick start for the project.
 
    3. You can run `.githooks/install.py` script to activate custom githooks inside `.githooks` folder if you want.
    4. How to run:
+
       1. If you want to run **socket**, **api** and **grpc** all in one action. run `cmd/main/main.go` file like:
-          * ```bash
-             go run ./cmd/main/main.go
-             # or
-             go run ./cmd/main/main.go -app=0
-             # or
-             go run ./cmd/main/main.go -app=b
-             # or
-             go run ./cmd/main/main.go -app=both
-             ```
+         - ```bash
+            go run ./cmd/main/main.go
+            # or
+            go run ./cmd/main/main.go -app=0
+            # or
+            go run ./cmd/main/main.go -app=b
+            # or
+            go run ./cmd/main/main.go -app=both
+           ```
       2. If you want to run **socket** and **api**, run `cmd/main/main.go` file like:
-          * ```bash
-             go run ./cmd/main/main.go -app=1
-             # or
-             go run ./cmd/main/main.go -app=f
-             # or
-             go run ./cmd/main/main.go -app=fiber
-             ```
+
+         - ```bash
+            go run ./cmd/main/main.go -app=1
+            # or
+            go run ./cmd/main/main.go -app=f
+            # or
+            go run ./cmd/main/main.go -app=fiber
+           ```
 
       3. If you want to run **grpc** server, run `cmd/main/main.go` file like:
-         * ```bash
+         - ```bash
            go run ./cmd/main/main.go -app=2
            # or
            go run ./cmd/main/main.go -app=g
@@ -100,6 +108,7 @@ There are two ways:
            ```
 
 # Documentation
+
 ## Clean Architecture
 
 If you don't have any idea about **clean** architecture, please just take a moment and just have a look at it first and after understanding the architecture, come back here and continue.
@@ -111,6 +120,7 @@ If you don't have any idea about **clean** architecture, please just take a mome
 The [`cfg.go`][cfg.go] file (if the [config files](#config-files) are passed just right) fills attributes in [`global.go`][global.go].
 
 Just to load everything right up, you have to import [`cfg.go`][cfg.go] file like:
+
 ```
 _ "github.com/maktoobgar/go_template/internal/app/load"
 ```
@@ -137,6 +147,7 @@ If you want to update default config file([`config.yaml`][config.yaml] file), yo
 If you need to translate anything in your application, use `g.Translator` object to do it and don't forget to add your translation to `build/translations` folder like other files that you can use as an example in that directory.
 
 **Note**: If you want to be so contractual, you can have interface of `g.Translator` by calling `g.Trans()` function and then do your translations like:
+
 ```
 g.Trans().TranslateEN("my word")
 ```
@@ -157,6 +168,7 @@ Please attention that a database connection with their `Name` equal to `main`, w
 ## Fiber Framework
 
 The framework that I'm using in this project is **fiber** and the reasons are simple:
+
 1. fast
 2. flexible
 3. easy to use
@@ -181,6 +193,7 @@ The services path is `internal/services` and inside that you can create a folder
 ## Adding Handler
 
 Adding handlers:
+
 1. If you are adding a http handler(api handler), use `internal/handlers/http` folder and create your handler inside it.
 2. If you are adding a socket handler, use `internal/handlers/socket` folder and create your handler inside it.
 3. If you are adding a grpc handler, use `internal/handlers/grpc` folder and create your handler inside it.

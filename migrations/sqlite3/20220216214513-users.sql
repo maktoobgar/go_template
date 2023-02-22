@@ -7,7 +7,6 @@ CREATE TABLE users (
     display_name varchar(128) NULL,
     first_name varchar(128) NULL,
     last_name varchar(128) NULL,
-    age int NULL,
     joined_date DATETIME NOT NULL
 );
 -- +migrate Down
