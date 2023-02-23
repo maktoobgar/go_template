@@ -10,7 +10,7 @@ import (
 
 func me(w http.ResponseWriter, r *http.Request) {
 	user := r.Context().Value("user").(*models.User)
-	userBytes, _ := json.Marshal(user)
+	userBytes, _ := json.Marshal(user.UserCore)
 	w.Write(userBytes)
 }
 

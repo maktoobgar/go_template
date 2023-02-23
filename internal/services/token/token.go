@@ -62,11 +62,10 @@ func (obj *tokenService) CreateRefreshToken(db *sql.DB, ctx context.Context, use
 	}
 
 	query := repositories.InsertInto(tkn.Name(), tkn, ctx)
-	result, err := db.ExecContext(ctx, query)
+	_, err = db.ExecContext(ctx, query)
 	if err != nil {
 		panic(errors.New(errors.UnexpectedStatus, errors.ReSignIn, translate("CreationRefreshTokenFailed")))
 	}
-	user.ID, _ = result.LastInsertId()
 
 	return tokenString, expirationTime
 }
@@ -74,7 +73,7 @@ func (obj *tokenService) CreateRefreshToken(db *sql.DB, ctx context.Context, use
 func (obj *tokenService) GetRefreshToken(db *sql.DB, ctx context.Context, token string) *models.RefreshToken {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	refreshToken := &models.RefreshToken{}
-	query := repositories.Select(refreshToken.Name(), map[string]any{
+	query := repositories.Select(refreshToken.Name(), refreshToken, map[string]any{
 		"token": token,
 	}, ctx)
 	err := db.QueryRowContext(ctx, query).Scan(refreshToken)
@@ -87,7 +86,7 @@ func (obj *tokenService) GetRefreshToken(db *sql.DB, ctx context.Context, token 
 
 func (obj *tokenService) SafeGetRefreshToken(db *sql.DB, ctx context.Context, token string) *models.RefreshToken {
 	refreshToken := &models.RefreshToken{}
-	query := repositories.Select(refreshToken.Name(), map[string]any{
+	query := repositories.Select(refreshToken.Name(), refreshToken, map[string]any{
 		"token": token,
 	}, ctx)
 	err := db.QueryRowContext(ctx, query).Scan(refreshToken)

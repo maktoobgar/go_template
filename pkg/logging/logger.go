@@ -279,6 +279,7 @@ func (l *LogBundle) Error(message string, r *http.Request, function any, params 
 
 // Panic message log
 func (l *LogBundle) Panic(err any, r *http.Request, stack string, params ...map[string]any) {
+	message := fmt.Sprintf("%v", err)
 	param := map[string]any{}
 	if len(params) > 0 {
 		param = params[0]
@@ -294,8 +295,8 @@ func (l *LogBundle) Panic(err any, r *http.Request, stack string, params ...map[
 		"stack":  stack,
 		"params": param,
 	}
-	l.pan.WithFields(logFields).Error(fmt.Sprintf("%v", err))
+	l.pan.WithFields(logFields).Error(message)
 	if l.debug {
-		fmt.Print(colors.Red + stack + colors.Reset)
+		fmt.Print(colors.Red + message + "\n" + stack + colors.Reset)
 	}
 }

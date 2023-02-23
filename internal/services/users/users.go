@@ -50,10 +50,10 @@ func (obj *userService) CreateUser(db *sql.DB, ctx context.Context, username str
 func (obj *userService) GetUser(db *sql.DB, ctx context.Context, username string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	user := &models.User{}
-	query := repositories.Select(user.Name(), map[string]any{
+	query := repositories.Select(user.Name(), user, map[string]any{
 		"username": username,
 	}, ctx)
-	err := db.QueryRowContext(ctx, query).Scan(user)
+	err := db.QueryRowContext(ctx, query).Scan(&user.ID, &user.Username, &user.DisplayName, &user.FirstName, &user.LastName, &user.JoinedDate, &user.Password)
 	if err != nil {
 		panic(errors.New(errors.NotFoundStatus, errors.Resend, translate("UserNotFound")))
 	}
@@ -63,7 +63,7 @@ func (obj *userService) GetUser(db *sql.DB, ctx context.Context, username string
 
 func (obj *userService) SafeGetUser(db *sql.DB, ctx context.Context, username string) *models.User {
 	user := &models.User{}
-	query := repositories.Select(user.Name(), map[string]any{
+	query := repositories.Select(user.Name(), user, map[string]any{
 		"username": username,
 	}, ctx)
 	err := db.QueryRowContext(ctx, query).Scan(user)
@@ -77,7 +77,7 @@ func (obj *userService) SafeGetUser(db *sql.DB, ctx context.Context, username st
 func (obj *userService) GetUserByID(db *sql.DB, ctx context.Context, id string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	user := &models.User{}
-	query := repositories.Select(user.Name(), map[string]any{
+	query := repositories.Select(user.Name(), user, map[string]any{
 		"id": id,
 	}, ctx)
 	err := db.QueryRowContext(ctx, query).Scan(user)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/golodash/galidator"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/handlers/utils"
 	"github.com/maktoobgar/go_template/internal/models"
@@ -13,9 +14,9 @@ import (
 )
 
 type signUpRequest struct {
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-	DisplayName string `json:"display_name"`
+	Username    string `json:"username" g:"required"`
+	Password    string `json:"password" g:"required"`
+	DisplayName string `json:"display_name" g:"required"`
 }
 
 type signUpResponse struct {
@@ -24,6 +25,10 @@ type signUpResponse struct {
 	RefreshToken string          `json:"refresh_token"`
 }
 
+var (
+	signUpValidator = generator.Validator(signUpRequest{}, galidator.Messages{"required": "$field is required"})
+)
+
 func signUp(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
@@ -31,6 +36,7 @@ func signUp(w http.ResponseWriter, r *http.Request) {
 	tService := token_service.New()
 	req := &signUpRequest{}
 	utils.ParseBody(r.Body, translate, req)
+	utils.ValidateBody(req, signUpValidator, translate)
 
 	user := uService.CreateUser(g.DB, ctx, req.Username, req.Password, req.DisplayName)
 

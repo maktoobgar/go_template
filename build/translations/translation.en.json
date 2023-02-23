@@ -1,5 +1,5 @@
 {
-	"RequiresNotProvided": "not all required fields provided",
+	"BodyNotProvidedProperly": "not all fields properly provided",
 	"Unauthorized": "authentication did not succeed",
 	"UnMatchPassword": "password doesn't match",
 	"DuplicateUser": "user already exists",

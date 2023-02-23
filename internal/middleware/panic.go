@@ -14,6 +14,7 @@ type PanicResponse struct {
 	Message string `json:"message"`
 	Action  int    `json:"action"`
 	Code    int    `json:"code"`
+	Errors  any    `json:"errors"`
 }
 
 func Panic(next http.Handler) http.Handler {
@@ -25,11 +26,12 @@ func Panic(next http.Handler) http.Handler {
 				return
 			}
 			if err, ok := errInterface.(error); ok && errors.IsServerError(err) {
-				code, action, message := errors.HttpError(err)
+				code, action, message, errors := errors.HttpError(err)
 				res := PanicResponse{
 					Message: message,
 					Action:  action,
 					Code:    code,
+					Errors:  errors,
 				}
 				resBytes, _ := json.Marshal(res)
 				w.WriteHeader(code)
@@ -41,6 +43,7 @@ func Panic(next http.Handler) http.Handler {
 					Message: translate("InternalServerError"),
 					Action:  errors.Report,
 					Code:    http.StatusInternalServerError,
+					Errors:  nil,
 				}
 				resBytes, _ := json.Marshal(res)
 				w.WriteHeader(http.StatusInternalServerError)

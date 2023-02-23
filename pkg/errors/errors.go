@@ -9,6 +9,7 @@ type (
 		code    int
 		action  int
 		message string
+		errors  any
 	}
 )
 
@@ -55,15 +56,17 @@ func (e serverError) Error() string {
 }
 
 // Returns httpErrorCode, message and action of it
-func HttpError(err error) (code int, action int, message string) {
+func HttpError(err error) (code int, action int, message string, errors any) {
 	code = http.StatusInternalServerError
 	action = Report
 	message = err.Error()
+	errors = nil
 
 	if er, ok := err.(serverError); ok {
 		code = httpErrors[er.code]
 		action = er.action
 		message = er.message
+		errors = er.errors
 	}
 
 	return
@@ -77,10 +80,15 @@ func IsServerError(err error) bool {
 }
 
 // Creates a new error
-func New(code int, action int, message string) error {
+func New(code int, action int, message string, errors ...any) error {
+	var errs any = nil
+	if len(errors) != 0 {
+		errs = errors[0]
+	}
 	return serverError{
 		code:    code,
 		action:  action,
 		message: message,
+		errors:  errs,
 	}
 }

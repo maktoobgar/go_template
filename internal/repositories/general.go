@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/maktoobgar/go_template/pkg/errors"
 	"github.com/maktoobgar/go_template/pkg/translator"
@@ -24,9 +25,11 @@ func structCheck(data any, ctx context.Context) (reflect.Type, reflect.Value) {
 }
 
 func formatValue(input any) string {
-	switch input.(type) {
+	switch input := input.(type) {
 	case int, int8, int16, int32, int64, float32, float64:
 		return fmt.Sprint(input)
+	case time.Time:
+		return fmt.Sprintf("'%s'", input.Format(time.RFC3339Nano))
 	default:
 		return fmt.Sprintf("'%s'", input)
 	}
@@ -39,8 +42,12 @@ func InsertInto(table string, data any, ctx context.Context) string {
 	values := ""
 	for _, f := range reflect.VisibleFields(dataType) {
 		if f.IsExported() {
-			name := f.Name
-			value := dataValue.FieldByName(name).Interface()
+			name := f.Tag.Get("db")
+			fieldName := f.Name
+			if name == "-" || name == "" || f.Tag.Get("skipInsert") == "+" {
+				continue
+			}
+			value := dataValue.FieldByName(fieldName).Interface()
 			if value != nil {
 				if keys == "" {
 					keys += name
@@ -55,8 +62,27 @@ func InsertInto(table string, data any, ctx context.Context) string {
 	return query + fmt.Sprintf("(%s) VALUES(%s);", keys, values)
 }
 
-func Select(table string, keyValues map[string]any, ctx context.Context) string {
+func Select(table string, data any, keyValues map[string]any, ctx context.Context) string {
+	dataType, dataValue := structCheck(data, ctx)
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
+	keys := ""
+	for _, f := range reflect.VisibleFields(dataType) {
+		if f.IsExported() {
+			name := f.Tag.Get("db")
+			fieldName := f.Name
+			if name == "-" || name == "" {
+				continue
+			}
+			value := dataValue.FieldByName(fieldName).Interface()
+			if value != nil {
+				if keys == "" {
+					keys += name
+					continue
+				}
+				keys += ", " + name
+			}
+		}
+	}
 	wheres := ""
 	for key, value := range keyValues {
 		if wheres == "" {
@@ -68,7 +94,7 @@ func Select(table string, keyValues map[string]any, ctx context.Context) string 
 	if wheres == "" {
 		panic(errors.New(errors.ForbiddenStatus, errors.DoNothing, translate("RetrievingAllTableNotAllowed")))
 	}
-	return fmt.Sprintf("SELECT DISTINCT * FROM %s WHERE %s;", table, wheres)
+	return fmt.Sprintf("SELECT DISTINCT %s FROM %s WHERE %s;", keys, table, wheres)
 }
 
 func Delete(table string, keyValues map[string]any, ctx context.Context) string {

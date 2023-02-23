@@ -12,6 +12,6 @@ func ParseBody(body io.ReadCloser, translator translator.TranslatorFunc, output 
 	bytes, err1 := io.ReadAll(body)
 	err2 := json.Unmarshal(bytes, output)
 	if err1 != nil || err2 != nil {
-		panic(errors.New(errors.InvalidStatus, errors.Resend, translator("RequiresNotProvided")))
+		panic(errors.New(errors.InvalidStatus, errors.Resend, translator("BodyNotProvidedProperly")))
 	}
 }
