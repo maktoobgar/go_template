@@ -2,14 +2,14 @@ package token_service
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/doug-martin/goqu/v9"
-	"github.com/doug-martin/goqu/v9/exp"
 	"github.com/maktoobgar/go_template/internal/contract"
 	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/internal/models"
+	"github.com/maktoobgar/go_template/internal/repositories"
 	"github.com/maktoobgar/go_template/pkg/errors"
 	"github.com/maktoobgar/go_template/pkg/translator"
 )
@@ -39,7 +39,7 @@ func (obj *tokenService) CreateAccessToken(user *models.User, ctx context.Contex
 	return tokenString, expirationTime
 }
 
-func (obj *tokenService) CreateRefreshToken(db *goqu.Database, ctx context.Context, user *models.User) (string, time.Time) {
+func (obj *tokenService) CreateRefreshToken(db *sql.DB, ctx context.Context, user *models.User) (string, time.Time) {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	expirationTime := time.Now().Add((24 * time.Hour) * 7)
 
@@ -57,48 +57,53 @@ func (obj *tokenService) CreateRefreshToken(db *goqu.Database, ctx context.Conte
 		panic(errors.New(errors.UnexpectedStatus, errors.ReSignIn, translate("GenerationTokenFailed")))
 	}
 
-	rows := []models.RefreshToken{
-		{Token: tokenString},
+	tkn := models.RefreshToken{
+		Token: tokenString,
 	}
 
-	_, err = db.Insert(models.RefreshTokenName).Rows(rows).Executor().Exec()
+	query := repositories.InsertInto(tkn.Name(), tkn, ctx)
+	result, err := db.ExecContext(ctx, query)
 	if err != nil {
 		panic(errors.New(errors.UnexpectedStatus, errors.ReSignIn, translate("CreationRefreshTokenFailed")))
 	}
+	user.ID, _ = result.LastInsertId()
 
 	return tokenString, expirationTime
 }
 
-func (obj *tokenService) GetRefreshToken(db *goqu.Database, ctx context.Context, token string) *models.RefreshToken {
+func (obj *tokenService) GetRefreshToken(db *sql.DB, ctx context.Context, token string) *models.RefreshToken {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	refreshToken := &models.RefreshToken{}
-	ok, err := db.From(models.RefreshTokenName).Limit(1).Where(exp.Ex{
+	query := repositories.Select(refreshToken.Name(), map[string]any{
 		"token": token,
-	}).Executor().ScanStruct(refreshToken)
-	if !ok || err != nil {
+	}, ctx)
+	err := db.QueryRowContext(ctx, query).Scan(refreshToken)
+	if err != nil {
 		panic(errors.New(errors.UnauthorizedStatus, errors.ReSignIn, translate("UsedRefreshToken")))
 	}
 
 	return refreshToken
 }
 
-func (obj *tokenService) SafeGetRefreshToken(db *goqu.Database, ctx context.Context, token string) *models.RefreshToken {
+func (obj *tokenService) SafeGetRefreshToken(db *sql.DB, ctx context.Context, token string) *models.RefreshToken {
 	refreshToken := &models.RefreshToken{}
-	ok, err := db.From(models.RefreshTokenName).Limit(1).Where(exp.Ex{
+	query := repositories.Select(refreshToken.Name(), map[string]any{
 		"token": token,
-	}).Executor().ScanStruct(refreshToken)
-	if !ok || err != nil {
+	}, ctx)
+	err := db.QueryRowContext(ctx, query).Scan(refreshToken)
+	if err != nil {
 		return nil
 	}
 
 	return refreshToken
 }
 
-func (obj *tokenService) DeleteRefreshToken(db *goqu.Database, ctx context.Context, token string) {
+func (obj *tokenService) DeleteRefreshToken(db *sql.DB, ctx context.Context, token string) {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
-	_, err := db.Delete(models.RefreshTokenName).Where(exp.Ex{
+	query := repositories.Delete(models.RefreshTokenName, map[string]any{
 		"token": token,
-	}).Executor().Exec()
+	}, ctx)
+	_, err := db.ExecContext(ctx, query)
 	if err != nil {
 		panic(errors.New(errors.UnexpectedStatus, errors.ReSignIn, translate("DeletionRefreshTokenFailed")))
 	}

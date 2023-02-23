@@ -64,7 +64,7 @@ func initialTranslator() {
 func initialLogger() {
 	k := cfg.Logging
 	opt := logging.Option(k)
-	l, err := logging.New(&opt)
+	l, err := logging.New(&opt, cfg.Debug)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -80,12 +80,12 @@ func initialDBs() {
 
 	var ok bool = false
 	if !g.CFG.Debug {
-		_, ok = g.AllDBs["main"]
+		_, ok = g.AllCons["main"]
 		if !ok {
 			log.Fatalln(errors.New("'main' db is not defined (required)"))
 		}
 	} else {
-		_, ok = g.AllDBs["test"]
+		_, ok = g.AllCons["test"]
 		if !ok {
 			log.Fatalln(errors.New("'test' db is not defined"))
 		}

@@ -1,10 +1,14 @@
 #!env/bin/python
 
-import os, random, string, sys
+import os
+import random
+import string
+import sys
 
 
 def generate_key(length: int) -> str:
-    return(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length)))
+    return (''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length)))
+
 
 def put_this_instead_that(this: str, that: str, texts: list, prefix: str) -> str:
     output = ""
@@ -20,6 +24,7 @@ def put_this_instead_that(this: str, that: str, texts: list, prefix: str) -> str
 
     return output
 
+
 def read_file(file_address: str) -> list:
     file = open(file_address, 'r')
     content = file.readlines()
@@ -27,19 +32,23 @@ def read_file(file_address: str) -> list:
 
     return content
 
+
 def write_file(file_address: str, content: str) -> None:
     file = open(file_address, 'w')
     file.write(content)
     file.close()
 
+
 def env_exists() -> bool:
     return os.path.isfile('env.yml') or os.path.isfile('env.yaml')
+
 
 def env_file_address() -> str:
     if os.path.isfile('env.yml'):
         return "env.yml"
     elif os.path.isfile('env.yaml'):
         return "env.yaml"
+
 
 def generate_secret_key(do_print: bool) -> None:
     key = generate_key(64)
@@ -50,15 +59,13 @@ def generate_secret_key(do_print: bool) -> None:
         return
     file_address = env_file_address()
 
-    write_file(file_address, put_this_instead_that(f"\"{key}\"", "secret_key", read_file(file_address), "secret_key: "))
+    write_file(file_address, put_this_instead_that(
+        f"\"{key}\"", "secret_key", read_file(file_address), "secret_key: "))
+
 
 def install_dependencies() -> None:
     print("===Installing Dependencies===\n")
     if os.system("go mod download -x all") != 0:
-        print("installing dependencies failed")
-        return
-
-    if os.system("go get -v github.com/rubenv/sql-migrate/... && git restore go.mod") != 0:
         print("installing dependencies failed")
         return
 
@@ -71,19 +78,18 @@ def install_dependencies() -> None:
 
     print("===Done===\n")
 
-def how_to_run() -> None:
-    print("===How To Run===\n")
-    print("./auto.py run\n")
 
 def create_python_env() -> None:
     print("===Creating env Folder===\n")
     os.system("python3 -m venv env")
     print("===Done===\n")
 
+
 def activate_githooks() -> None:
     print("===Activating Githooks===\n")
     os.system("python3 .githooks/install.py")
     print("===Done===\n")
+
 
 def main() -> None:
     if sys.argv[1].lower() == "generate":
@@ -94,10 +100,6 @@ def main() -> None:
         generate_secret_key(False)
         create_python_env()
         activate_githooks()
-        how_to_run()
-
-    elif sys.argv[1].lower() == "run":
-        os.system("go run ./cmd/main/main.go")
 
 
 if __name__ == "__main__":

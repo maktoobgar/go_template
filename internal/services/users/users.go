@@ -2,11 +2,12 @@ package user_service
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
-	"github.com/doug-martin/goqu/v9"
 	"github.com/maktoobgar/go_template/internal/contract"
 	"github.com/maktoobgar/go_template/internal/models"
+	"github.com/maktoobgar/go_template/internal/repositories"
 	"github.com/maktoobgar/go_template/pkg/errors"
 	"github.com/maktoobgar/go_template/pkg/translator"
 	"golang.org/x/crypto/bcrypt"
@@ -25,7 +26,7 @@ func (obj *userService) CheckPasswordHash(password, hash string) bool {
 	return nil == bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
 
-func (obj *userService) CreateUser(db *goqu.Database, ctx context.Context, username string, password string, display_name string) *models.User {
+func (obj *userService) CreateUser(db *sql.DB, ctx context.Context, username string, password string, display_name string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	user := &models.User{
 		UserCore: models.UserCore{
@@ -36,50 +37,51 @@ func (obj *userService) CreateUser(db *goqu.Database, ctx context.Context, usern
 		Password: obj.HashPassword(password),
 	}
 
-	_, err := db.Insert(models.UserName).Rows([]*models.User{user}).Executor().Exec()
+	query := repositories.InsertInto(user.Name(), user, ctx)
+	result, err := db.ExecContext(ctx, query)
 	if err != nil {
 		panic(errors.New(errors.InvalidStatus, errors.Resend, translate("SignUpFailure")))
 	}
+	user.ID, _ = result.LastInsertId()
 
-	user = obj.GetUser(db, ctx, username)
 	return user
 }
 
-func (obj *userService) GetUser(db *goqu.Database, ctx context.Context, username string) *models.User {
+func (obj *userService) GetUser(db *sql.DB, ctx context.Context, username string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	user := &models.User{}
-	ok, err := db.From(models.UserName).Limit(1).Where(goqu.Ex{
+	query := repositories.Select(user.Name(), map[string]any{
 		"username": username,
-	}).Executor().ScanStruct(user)
-
-	if !ok || err != nil {
+	}, ctx)
+	err := db.QueryRowContext(ctx, query).Scan(user)
+	if err != nil {
 		panic(errors.New(errors.NotFoundStatus, errors.Resend, translate("UserNotFound")))
 	}
 
 	return user
 }
 
-func (obj *userService) SafeGetUser(db *goqu.Database, ctx context.Context, username string) *models.User {
+func (obj *userService) SafeGetUser(db *sql.DB, ctx context.Context, username string) *models.User {
 	user := &models.User{}
-	ok, err := db.From(models.UserName).Limit(1).Where(goqu.Ex{
+	query := repositories.Select(user.Name(), map[string]any{
 		"username": username,
-	}).Executor().ScanStruct(user)
-
-	if !ok || err != nil {
+	}, ctx)
+	err := db.QueryRowContext(ctx, query).Scan(user)
+	if err != nil {
 		return nil
 	}
 
 	return user
 }
 
-func (obj *userService) GetUserByID(db *goqu.Database, ctx context.Context, id string) *models.User {
+func (obj *userService) GetUserByID(db *sql.DB, ctx context.Context, id string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	user := &models.User{}
-	ok, err := db.From(models.UserName).Limit(1).Where(goqu.Ex{
+	query := repositories.Select(user.Name(), map[string]any{
 		"id": id,
-	}).Executor().ScanStruct(user)
-
-	if !ok || err != nil || user == nil {
+	}, ctx)
+	err := db.QueryRowContext(ctx, query).Scan(user)
+	if err != nil {
 		panic(errors.New(errors.NotFoundStatus, errors.Resend, translate("UserNotFound")))
 	}
 

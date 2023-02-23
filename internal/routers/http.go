@@ -8,7 +8,7 @@ import (
 )
 
 func basicMiddlewares(next http.Handler, methods ...string) http.Handler {
-	return m.Panic(m.Json(m.Translator(m.Cors(m.Method(next, methods...)))))
+	return m.Translator(m.Panic(m.Json(m.Cors(m.Method(next, methods...)))))
 }
 
 func HTTP(mux *http.ServeMux) {

@@ -3,8 +3,11 @@ package middleware
 import (
 	"encoding/json"
 	"net/http"
+	"runtime/debug"
 
+	g "github.com/maktoobgar/go_template/internal/global"
 	"github.com/maktoobgar/go_template/pkg/errors"
+	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
 type PanicResponse struct {
@@ -15,21 +18,34 @@ type PanicResponse struct {
 
 func Panic(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		translate := r.Context().Value("translate").(translator.TranslatorFunc)
 		defer func() {
 			errInterface := recover()
 			if errInterface == nil {
 				return
 			}
-			err := errInterface.(error)
-			code, action, message := errors.HttpError(err)
-			res := PanicResponse{
-				Message: message,
-				Action:  action,
-				Code:    code,
+			if err, ok := errInterface.(error); ok && errors.IsServerError(err) {
+				code, action, message := errors.HttpError(err)
+				res := PanicResponse{
+					Message: message,
+					Action:  action,
+					Code:    code,
+				}
+				resBytes, _ := json.Marshal(res)
+				w.WriteHeader(code)
+				w.Write(resBytes)
+			} else {
+				stack := string(debug.Stack())
+				g.Logger.Panic(errInterface, r, stack)
+				res := PanicResponse{
+					Message: translate("InternalServerError"),
+					Action:  errors.Report,
+					Code:    http.StatusInternalServerError,
+				}
+				resBytes, _ := json.Marshal(res)
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write(resBytes)
 			}
-			resBytes, _ := json.Marshal(res)
-			w.WriteHeader(code)
-			w.Write(resBytes)
 		}()
 		next.ServeHTTP(w, r)
 	})

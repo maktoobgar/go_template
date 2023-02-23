@@ -1,10 +1,7 @@
 package errors
 
 import (
-	"fmt"
 	"net/http"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type (
@@ -72,17 +69,11 @@ func HttpError(err error) (code int, action int, message string) {
 	return
 }
 
-func ErrorHandler(c *fiber.Ctx, err error) error {
-	// Set Content-Type: application/json; charset=utf-8
-	c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
-
-	code, action, message := HttpError(err)
-
-	return c.Status(code).JSON(map[string]string{
-		"Code":    fmt.Sprint(code),
-		"Action":  fmt.Sprint(action),
-		"Message": message,
-	})
+func IsServerError(err error) bool {
+	if _, ok := err.(serverError); ok {
+		return true
+	}
+	return false
 }
 
 // Creates a new error

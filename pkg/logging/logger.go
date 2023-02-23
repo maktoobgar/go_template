@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/alecthomas/units"
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/maktoobgar/go_template/pkg/colors"
 	"github.com/sirupsen/logrus"
 	"github.com/xhit/go-str2duration/v2"
 )
@@ -28,6 +30,13 @@ type LogBundle struct {
 	war *logrus.Logger
 	err *logrus.Logger
 	pan *logrus.Logger
+
+	infDebug *logrus.Logger
+	warDebug *logrus.Logger
+	errDebug *logrus.Logger
+	panDebug *logrus.Logger
+
+	debug bool
 }
 
 // Takes options needed for logs configs and returns
@@ -35,7 +44,7 @@ type LogBundle struct {
 //
 // If no address in `opt.Path` is provided,
 // "/var/log/project" address will be used as default
-func New(opt *Option) (Logger, error) {
+func New(opt *Option, debug bool) (Logger, error) {
 	if opt == nil {
 		return nil, errors.New("option can not be nil")
 	}
@@ -49,16 +58,31 @@ func New(opt *Option) (Logger, error) {
 	}
 
 	l := &LogBundle{
-		inf: logrus.New(),
-		war: logrus.New(),
-		err: logrus.New(),
-		pan: logrus.New(),
+		inf:      logrus.New(),
+		war:      logrus.New(),
+		err:      logrus.New(),
+		pan:      logrus.New(),
+		infDebug: logrus.New(),
+		warDebug: logrus.New(),
+		errDebug: logrus.New(),
+		panDebug: logrus.New(),
+		debug:    debug,
 	}
 
-	l.inf.SetFormatter(&logrus.TextFormatter{})
-	l.war.SetFormatter(&logrus.TextFormatter{})
-	l.err.SetFormatter(&logrus.TextFormatter{})
-	l.pan.SetFormatter(&logrus.TextFormatter{})
+	l.inf.SetFormatter(&logrus.JSONFormatter{})
+	l.war.SetFormatter(&logrus.JSONFormatter{})
+	l.err.SetFormatter(&logrus.JSONFormatter{})
+	l.pan.SetFormatter(&logrus.JSONFormatter{})
+	if debug {
+		l.infDebug.SetFormatter(&logrus.JSONFormatter{})
+		l.warDebug.SetFormatter(&logrus.JSONFormatter{})
+		l.errDebug.SetFormatter(&logrus.JSONFormatter{})
+		l.panDebug.SetFormatter(&logrus.JSONFormatter{})
+		l.infDebug.SetOutput(os.Stdout)
+		l.warDebug.SetOutput(os.Stdout)
+		l.errDebug.SetOutput(os.Stdout)
+		l.panDebug.SetOutput(os.Stdout)
+	}
 
 	for i := 0; i < 4; i++ {
 		writer, err := getLoggerWriter(opt, &i)
@@ -176,49 +200,102 @@ func createAddress(address string) error {
 }
 
 // Info message log
-//
-// Put your message in `message` variable and write your current function in `function`
-// and if you need to print some more parameters, put them inside `params` variable
-func (l *LogBundle) Info(message string, function interface{}, params map[string]interface{}) {
-	l.inf.WithFields(logrus.Fields{
+func (l *LogBundle) Info(message string, r *http.Request, function any, params ...map[string]any) {
+	param := map[string]any{}
+	if len(params) > 0 {
+		param = params[0]
+	}
+	data := ""
+	if dataBytes, errTemp := io.ReadAll(r.Body); errTemp == nil {
+		data = string(dataBytes)
+	}
+	logFields := logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
-		"params":   params,
-	}).Info(message)
+		"url":      r.URL.Path,
+		"method":   r.Method,
+		"body":     data,
+		"params":   param,
+	}
+	l.inf.WithFields(logFields).Info(message)
+	if l.debug {
+		fmt.Print(colors.Gray)
+		l.infDebug.WithFields(logFields).Info(message)
+		fmt.Print(colors.Reset)
+	}
 }
 
 // Warning message log
-//
-// Put your message in `message` variable and write your current function in `function`
-// and if you need to print some more parameters, put them inside `params` variable
-func (l *LogBundle) Warning(message string, function interface{}, params map[string]interface{}) {
-	l.war.WithFields(logrus.Fields{
+func (l *LogBundle) Warning(message string, r *http.Request, function any, params ...map[string]any) {
+	param := map[string]any{}
+	if len(params) > 0 {
+		param = params[0]
+	}
+	data := ""
+	if dataBytes, errTemp := io.ReadAll(r.Body); errTemp == nil {
+		data = string(dataBytes)
+	}
+	logFields := logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
-		"params":   params,
-	}).Warning(message)
+		"url":      r.URL.Path,
+		"method":   r.Method,
+		"body":     data,
+		"params":   param,
+	}
+	l.war.WithFields(logFields).Warning(message)
+	if l.debug {
+		fmt.Print(colors.Purple)
+		l.warDebug.WithFields(logFields).Warning(message)
+		fmt.Print(colors.Reset)
+	}
 }
 
 // Error message log
-//
-// Put your message in `message` variable and write your current function in `function`
-// and if you need to print some more parameters, put them inside `params` variable
-func (l *LogBundle) Error(message string, function interface{}, params map[string]interface{}) {
-	l.err.WithFields(logrus.Fields{
+func (l *LogBundle) Error(message string, r *http.Request, function any, params ...map[string]any) {
+	param := map[string]any{}
+	if len(params) > 0 {
+		param = params[0]
+	}
+	data := ""
+	if dataBytes, errTemp := io.ReadAll(r.Body); errTemp == nil {
+		data = string(dataBytes)
+	}
+	logFields := logrus.Fields{
 		"package":  getPackageName(function),
 		"function": getFunctionName(function),
-		"params":   params,
-	}).Error(message)
+		"url":      r.URL.Path,
+		"method":   r.Method,
+		"body":     data,
+		"params":   param,
+	}
+	l.err.WithFields(logFields).Error(message)
+	if l.debug {
+		fmt.Print(colors.Yellow)
+		l.errDebug.WithFields(logFields).Error(message)
+		fmt.Print(colors.Reset)
+	}
 }
 
 // Panic message log
-//
-// Put your message in `message` variable and write your current function in `function`
-// and if you need to print some more parameters, put them inside `params` variable
-func (l *LogBundle) Panic(message string, function interface{}, params map[string]interface{}) {
-	l.pan.WithFields(logrus.Fields{
-		"package":  getPackageName(function),
-		"function": getFunctionName(function),
-		"params":   params,
-	}).Panic(message)
+func (l *LogBundle) Panic(err any, r *http.Request, stack string, params ...map[string]any) {
+	param := map[string]any{}
+	if len(params) > 0 {
+		param = params[0]
+	}
+	data := ""
+	if dataBytes, errTemp := io.ReadAll(r.Body); errTemp == nil {
+		data = string(dataBytes)
+	}
+	logFields := logrus.Fields{
+		"url":    r.URL.Path,
+		"method": r.Method,
+		"body":   data,
+		"stack":  stack,
+		"params": param,
+	}
+	l.pan.WithFields(logFields).Error(fmt.Sprintf("%v", err))
+	if l.debug {
+		fmt.Print(colors.Red + stack + colors.Reset)
+	}
 }

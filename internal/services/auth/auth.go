@@ -2,8 +2,8 @@ package auth_service
 
 import (
 	"context"
+	"database/sql"
 
-	"github.com/doug-martin/goqu/v9"
 	"github.com/maktoobgar/go_template/internal/contract"
 	"github.com/maktoobgar/go_template/internal/models"
 	user_service "github.com/maktoobgar/go_template/internal/services/users"
@@ -15,7 +15,7 @@ type authService struct{}
 
 var instance = &authService{}
 
-func (obj *authService) authenticate(db *goqu.Database, ctx context.Context, username string, password string) *models.User {
+func (obj *authService) authenticate(db *sql.DB, ctx context.Context, username string, password string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	uService := user_service.New()
 	user := uService.GetUser(db, ctx, username)
@@ -27,11 +27,11 @@ func (obj *authService) authenticate(db *goqu.Database, ctx context.Context, use
 	return user
 }
 
-func (obj *authService) SignIn(db *goqu.Database, ctx context.Context, username string, password string) *models.User {
+func (obj *authService) SignIn(db *sql.DB, ctx context.Context, username string, password string) *models.User {
 	return obj.authenticate(db, ctx, username, password)
 }
 
-func (obj *authService) SignUp(db *goqu.Database, ctx context.Context, username string, password string, display_name string) *models.User {
+func (obj *authService) SignUp(db *sql.DB, ctx context.Context, username string, password string, display_name string) *models.User {
 	translate := ctx.Value("translate").(translator.TranslatorFunc)
 	uService := user_service.New()
 	user := uService.SafeGetUser(db, ctx, username)

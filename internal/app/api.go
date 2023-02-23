@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	g "github.com/maktoobgar/go_template/internal/global"
@@ -24,5 +25,5 @@ func API() {
 	routers.HTTP(mux)
 
 	// Run App
-	g.Logger.Panic(server.ListenAndServe().Error(), API, nil)
+	log.Panic(server.ListenAndServe().Error())
 }

@@ -4,16 +4,14 @@ import (
 	"database/sql"
 	"net/http"
 
-	"github.com/doug-martin/goqu/v9"
 	"github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
 )
 
 // Handling section
-type HandlerFunc func(w http.ResponseWriter, r *http.Request)
 type Handler struct {
-	Handler HandlerFunc
+	Handler func(w http.ResponseWriter, r *http.Request)
 }
 
 // Function that gets executed to host a url
@@ -34,15 +32,8 @@ var Server *http.Server = nil
 // AppSecret
 var SecretKey []byte = nil
 
-// DBs
-var Postgres = map[string]*goqu.Database{}
-var Sqlite = map[string]*goqu.Database{}
-var MySQL = map[string]*goqu.Database{}
-var SqlServer = map[string]*goqu.Database{}
-var AllDBs = map[string]*goqu.Database{}
-
 // Default DB
-var DB *goqu.Database = nil
+var DB *sql.DB = nil
 
 // Connections
 var PostgresCons = map[string]*sql.DB{}

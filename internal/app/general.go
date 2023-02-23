@@ -20,8 +20,8 @@ func info() {
 			} else {
 				fmt.Printf("Main Database: %v, %v, %v:%v\n", database.Type, database.DBName, database.Host, database.Port)
 			}
-			if database.Type != g.DB.Dialect() {
-				log.Fatal("expected database is not assigned as main database")
+			if g.DB == nil {
+				log.Fatal("expected database connection is not assigned as main database")
 			}
 			break
 		}
@@ -29,4 +29,5 @@ func info() {
 	fmt.Printf("Debug: %v\n", g.CFG.Debug)
 	fmt.Printf("Address: http://%s:%s\n", g.CFG.Api.IP, g.CFG.Api.Port)
 	fmt.Printf("Allowed Origins: %v\n", g.CFG.AllowOrigins)
+	fmt.Print("===============\n\n")
 }
