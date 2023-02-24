@@ -15,14 +15,18 @@ func basicMiddlewares(next http.Handler, methods ...string) http.Handler {
 }
 
 func HTTP(mux *router.Router) {
-	mux.Handle("/.*/", basicMiddlewares(httpHandler.NotFound, "GET"))
-	mux.Handle("/api/.+/", basicMiddlewares(httpHandler.Hi, "GET"))
-	mux.Handle("/api/me/", basicMiddlewares(m.Auth(httpHandler.Me), "GET"))
-
-	// /api/auth
+	// /api
 	{
-		mux.Handle("/api/auth/sign_in/", basicMiddlewares(httpHandler.SignIn, "POST"))
-		mux.Handle("/api/auth/sign_up/", basicMiddlewares(httpHandler.SignUp, "POST"))
-		mux.Handle("/api/auth/refresh/", basicMiddlewares(httpHandler.Refresh, "POST"))
+		mux.Handle("/api/me/", basicMiddlewares(m.Auth(httpHandler.Me), "GET"))
+		// /api/auth
+		{
+			mux.Handle("/api/auth/sign_in/", basicMiddlewares(httpHandler.SignIn, "POST"))
+			mux.Handle("/api/auth/sign_up/", basicMiddlewares(httpHandler.SignUp, "POST"))
+			mux.Handle("/api/auth/refresh/", basicMiddlewares(httpHandler.Refresh, "POST"))
+		}
+		mux.Handle("/api/.+/", basicMiddlewares(httpHandler.Hi, "GET"))
 	}
+
+	// Not found
+	mux.Handle("/.*/", basicMiddlewares(httpHandler.NotFound, "GET"))
 }

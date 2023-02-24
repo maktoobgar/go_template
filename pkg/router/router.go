@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"regexp"
-	"sort"
 	"sync"
 )
 
@@ -16,7 +15,7 @@ type muxEntry struct {
 type Router struct {
 	mu sync.RWMutex
 	m  map[string]muxEntry
-	es []muxEntry // slice of entries sorted from longest to shortest.
+	es []muxEntry
 	http.ServeMux
 }
 
@@ -45,7 +44,7 @@ func (mux *Router) Handle(pattern string, handler http.Handler) {
 	}
 	e := muxEntry{h: handler, pattern: pattern}
 	mux.m[pattern] = e
-	mux.es = appendSorted(mux.es, e)
+	mux.es = append(mux.es, e)
 }
 
 // ServeHTTP dispatches the request to the handler whose
@@ -94,19 +93,4 @@ func (mux *Router) handler(path string) (h http.Handler, pattern string) {
 		h, pattern = http.NotFoundHandler(), ""
 	}
 	return
-}
-
-func appendSorted(es []muxEntry, e muxEntry) []muxEntry {
-	n := len(es)
-	i := sort.Search(n, func(i int) bool {
-		return len(es[i].pattern) < len(e.pattern)
-	})
-	if i == n {
-		return append(es, e)
-	}
-	// we now know that i points at where we want to insert
-	es = append(es, muxEntry{}) // try to grow the slice in place, any entry works.
-	copy(es[i+1:], es[i:])      // Move shorter entries down
-	es[i] = e
-	return es
 }
