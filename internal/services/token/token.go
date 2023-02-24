@@ -3,6 +3,7 @@ package token_service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -89,8 +90,9 @@ func (obj *tokenService) SafeGetRefreshToken(db *sql.DB, ctx context.Context, to
 	query := repositories.Select(refreshToken.Name(), refreshToken, map[string]any{
 		"token": token,
 	}, ctx)
-	err := db.QueryRowContext(ctx, query).Scan(refreshToken)
+	err := db.QueryRowContext(ctx, query).Scan(&refreshToken.Token)
 	if err != nil {
+		fmt.Println(err)
 		return nil
 	}
 
