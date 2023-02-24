@@ -39,11 +39,7 @@ func (mux *Router) Handle(pattern string, handler http.Handler) {
 		panic("router: first and end of every route has to contain `/`")
 	}
 
-	if pattern != "/" {
-		pattern = fmt.Sprintf("^%s$", pattern[1:len(pattern)-1])
-	} else {
-		pattern = fmt.Sprintf("^%s$", pattern)
-	}
+	pattern = fmt.Sprintf("^%s$", pattern)
 	if mux.m == nil {
 		mux.m = make(map[string]muxEntry)
 	}
@@ -69,11 +65,8 @@ func (mux *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (mux *Router) Handler(r *http.Request) (h http.Handler, pattern string) {
 	path := r.URL.Path
 	if path != "/" {
-		if path[len(path)-1] == '/' {
-			path = path[:len(path)-1]
-		}
-		if path[0] == '/' {
-			path = path[1:]
+		if path[len(path)-1] != '/' {
+			path = fmt.Sprintf("%s/", path)
 		}
 	}
 

@@ -46,7 +46,7 @@ func Panic(next http.Handler) http.Handler {
 					Errors:  nil,
 				}
 				resBytes, _ := json.Marshal(res)
-				w.WriteHeader(http.StatusInternalServerError)
+				w.WriteHeader(res.Code)
 				w.Write(resBytes)
 			}
 		}()

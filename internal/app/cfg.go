@@ -5,11 +5,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/maktoobgar/go_template/build"
 	iconfig "github.com/maktoobgar/go_template/internal/config"
 	"github.com/maktoobgar/go_template/internal/databases"
 	g "github.com/maktoobgar/go_template/internal/global"
+	"github.com/maktoobgar/go_template/internal/middleware"
 	"github.com/maktoobgar/go_template/pkg/config"
 	"github.com/maktoobgar/go_template/pkg/logging"
 	"github.com/maktoobgar/go_template/pkg/translator"
@@ -49,6 +51,7 @@ func initializeConfigs() {
 
 	g.CFG = cfg
 	g.SecretKey = []byte(cfg.SecretKey)
+	middleware.AddHeaders(strings.Split(g.CFG.AllowHeaders, ","))
 }
 
 // Translator initialization

@@ -27,6 +27,8 @@ const (
 	MethodNotAllowedStatus
 	// Forbidden 403
 	ForbiddenStatus
+	// Timeout 408
+	TimeoutStatus
 )
 
 const (
@@ -48,6 +50,7 @@ var (
 		UnexpectedStatus:       http.StatusInternalServerError,
 		MethodNotAllowedStatus: http.StatusMethodNotAllowed,
 		ForbiddenStatus:        http.StatusForbidden,
+		TimeoutStatus:          http.StatusRequestTimeout,
 	}
 )
 

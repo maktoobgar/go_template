@@ -29,6 +29,7 @@
 	"CorsError": "access to this resource is not allowed",
 	"CreationRefreshTokenFailed": "refresh token creation failed",
 	"InternalServerError": "internal server error",
+	"TimeoutError": "request timed out",
 	"RemovingAllTableNotAllowed": "removing all table data is not allowed",
 	"RetrievingAllTableNotAllowed": "retrieving all table data is not allowed",
 	"DeletionRefreshTokenFailed": "refresh token deletion failed"

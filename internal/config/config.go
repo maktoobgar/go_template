@@ -2,16 +2,20 @@ package config
 
 type (
 	Config struct {
-		Databases    []Database `yaml:"databases"`
-		Translator   Translator `yaml:"translator"`
-		Logging      Logging    `yaml:"logging"`
-		Api          Api        `yaml:"api"`
-		Grpc         Grpc       `yaml:"grpc"`
-		Debug        bool       `yaml:"debug"`
-		Domain       string     `yaml:"domain"`
-		PWD          string     `yaml:"pwd"`
-		AllowOrigins string     `yaml:"allow_origins"`
-		SecretKey    string     `yaml:"secret_key"`
+		Databases             []Database `yaml:"databases"`
+		Translator            Translator `yaml:"translator"`
+		Logging               Logging    `yaml:"logging"`
+		Api                   Api        `yaml:"api"`
+		Grpc                  Grpc       `yaml:"grpc"`
+		Debug                 bool       `yaml:"debug"`
+		Domain                string     `yaml:"domain"`
+		PWD                   string     `yaml:"pwd"`
+		AllowOrigins          string     `yaml:"allow_origins"`
+		AllowHeaders          string     `yaml:"allow_headers"`
+		MaxAge                int        `yaml:"max_age"`
+		Timeout               int64      `yaml:"timeout"`
+		MaxConcurrentRequests int        `yaml:"max_concurrent_requests"`
+		SecretKey             string     `yaml:"secret_key"`
 	}
 
 	Database struct {
